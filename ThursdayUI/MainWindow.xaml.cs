@@ -35,6 +35,7 @@ namespace ThursdayUI
 
         int gridSize = 44;
         Image[,] pieceBoxes = new Image[8, 8];
+        private bool m_Flipped = false;
 
         public static class PieceStrings
         {
@@ -55,7 +56,7 @@ namespace ThursdayUI
 
         public static class PieceImages
         {
-            static string imgDir = Directory.GetCurrentDirectory() + ".\\images\\";
+            static string imgDir = Directory.GetCurrentDirectory() + ".\\..\\..\\images\\";
 
             public static BitmapImage bbp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbp.png")));
             public static BitmapImage bbn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbn.png")));
@@ -185,6 +186,12 @@ namespace ThursdayUI
             int oldPos = (int)fromImage.Tag;
             int destPos = (int)toImage.Tag;
 
+            if (!m_Flipped)
+            {
+                oldPos = 63 - oldPos;
+                destPos = 63 - destPos;
+            }
+
             try
             {
                 computer.MakeMove(oldPos, destPos);
@@ -216,7 +223,13 @@ namespace ThursdayUI
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                 {
-                    Piece piece = board.S[i * 8 + j];
+                    Piece piece;
+
+                    if(m_Flipped)
+                        piece = board.S[i * 8 + j];
+                    else
+                        piece = board.S[63 - (i * 8 + j)];
+
                     Colour squareColour = i % 2 == j % 2 ? Colour.White : Colour.Black;
                     pieceBoxes[j, i].Source = PieceImages.For(piece.Colour, squareColour, piece.PieceType);
                 }
@@ -230,6 +243,12 @@ namespace ThursdayUI
             Move bestMove = computer.ComputeAlphaBetaMove();
             computer.MakeMove(bestMove.From, bestMove.To);
             labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
+            RenderBoard(computer.Board);
+        }
+
+        private void buttonFlip_Click(object sender, RoutedEventArgs e)
+        {
+            m_Flipped = !m_Flipped;
             RenderBoard(computer.Board);
         }
 

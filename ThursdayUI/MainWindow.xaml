@@ -3,10 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Thrusday" Height="535" Width="674" ResizeMode="NoResize">
     <Grid>
-        <Canvas Name="boardCanvas" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="400"/>
-        <Button Content="Restart" Height="49" HorizontalAlignment="Left" Margin="422,12,0,0" Name="buttonGo" VerticalAlignment="Top" Width="218" Click="buttonGo_Click" FontSize="20" />
-        <Button Content="Computer make move" Height="51" HorizontalAlignment="Left" Margin="422,79,0,0" Name="buttonNext" VerticalAlignment="Top" Width="218" Click="buttonNext_Click" FontSize="20" />
-        <Label Content="xxxx" Height="28" HorizontalAlignment="Left" Margin="552,445,0,0" Name="labelScoreBoard" VerticalAlignment="Top" Width="79" />
-        <Button Content="Score Board" Height="23" HorizontalAlignment="Left" Margin="471,445,0,0" Name="buttonScoreBoard" VerticalAlignment="Top" Width="75" Click="buttonScoreBoard_Click" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Canvas Name="boardCanvas" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="400" Grid.Column="0" Grid.Row="0"></Canvas>
+
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <Button Content="Restart" Height="49" HorizontalAlignment="Left" Name="buttonGo" VerticalAlignment="Top" Width="218" Click="buttonGo_Click" FontSize="20" />
+            <Button Content="Flip board" Height="49" HorizontalAlignment="Left" Name="buttonFlip" VerticalAlignment="Top" Width="218" Click="buttonFlip_Click" FontSize="20" />
+            <Button Content="Computer make move" Height="51" HorizontalAlignment="Left" Name="buttonNext" VerticalAlignment="Top" Width="218" Click="buttonNext_Click" FontSize="20" />
+            <Label Content="xxxx" Height="28" HorizontalAlignment="Left" Name="labelScoreBoard" VerticalAlignment="Top" Width="79" />
+            <Button Content="Score Board" Height="23" HorizontalAlignment="Left" Name="buttonScoreBoard" VerticalAlignment="Top" Width="75" Click="buttonScoreBoard_Click" />
+        </StackPanel>
     </Grid>
 </Window>

@@ -145,7 +145,7 @@ namespace Thursday
                 {
                     m_AllPossibleMoves = new List<Move>();
                     EnumerateAllMoves();
-                    m_AllPossibleMoves = m_AllPossibleMoves.OrderByDescending(m => (new Board(this, m.From, m.To)).ScoreBoard()).ToList();
+                    //m_AllPossibleMoves = m_AllPossibleMoves.OrderByDescending(m => (new Board(this, m.From, m.To)).ScoreBoard()).ToList();
                 }
 
                 return m_AllPossibleMoves;
