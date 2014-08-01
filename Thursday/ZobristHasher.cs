@@ -67,7 +67,7 @@ namespace Thursday
 
             if (m_Zs.ContainsKey(hash))
             {
-                if (m_Zs[hash].Item1 > tuple.Item1)
+                if (m_Zs[hash].Item1 < tuple.Item1)
                     m_Zs[hash] = tuple;
             }
             else
