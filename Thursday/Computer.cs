@@ -80,7 +80,12 @@ namespace Thursday
             m_RankedMoves = new List<Tuple<Move, double>>();
             double score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
-            return m_RankedMoves.OrderByDescending(x => x.Item2).First().Item1;
+            if (WhosMove == Colour.Black)
+                return m_RankedMoves.OrderBy(x => x.Item2).First().Item1;
+            else if (WhosMove == Colour.White)
+                return m_RankedMoves.OrderByDescending(x => x.Item2).First().Item1;
+            else
+                throw new ApplicationException();
         }
 
         private const int MaxNegamaxDepth = 4;
@@ -122,7 +127,7 @@ namespace Thursday
                     if (depth == MaxNegamaxDepth)
                     {
                         if (!boardAfterMove.MoverIsInCheck())
-                            m_RankedMoves.Add(new Tuple<Move, double>(move, score));
+                            m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
                     }
                 }
 
