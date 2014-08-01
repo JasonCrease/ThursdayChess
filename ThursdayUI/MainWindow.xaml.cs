@@ -35,7 +35,7 @@ namespace ThursdayUI
 
         int gridSize = 44;
         Image[,] pieceBoxes = new Image[8, 8];
-        private bool m_Flipped = false;
+        private bool m_Flipped = true;
 
         public static class PieceStrings
         {
@@ -186,7 +186,7 @@ namespace ThursdayUI
             int oldPos = (int)fromImage.Tag;
             int destPos = (int)toImage.Tag;
 
-            if (!m_Flipped)
+            if (m_Flipped)
             {
                 oldPos = 63 - oldPos;
                 destPos = 63 - destPos;
@@ -197,7 +197,8 @@ namespace ThursdayUI
                 computer.MakeMove(oldPos, destPos);
                 //Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(RenderBoard), computer.Board);
                 //RenderBoard(computer.Board);
-                computer.ComputeNegamaxMove();
+                Move bestMove = computer.ComputeNegamaxMove();
+                computer.MakeMove(bestMove.From, bestMove.To);
                 labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
                 RenderBoard(computer.Board);
             }
@@ -225,10 +226,10 @@ namespace ThursdayUI
                 {
                     Piece piece;
 
-                    if(m_Flipped)
-                        piece = board.S[i * 8 + j];
-                    else
+                    if (m_Flipped)
                         piece = board.S[63 - (i * 8 + j)];
+                    else
+                        piece = board.S[i * 8 + j];
 
                     Colour squareColour = i % 2 == j % 2 ? Colour.White : Colour.Black;
                     pieceBoxes[j, i].Source = PieceImages.For(piece.Colour, squareColour, piece.PieceType);
@@ -240,7 +241,7 @@ namespace ThursdayUI
 
         private void buttonNext_Click(object sender, RoutedEventArgs e)
         {
-            Move bestMove = computer.ComputeAlphaBetaMove();
+            Move bestMove = computer.ComputeNegamaxMove();
             computer.MakeMove(bestMove.From, bestMove.To);
             labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
             RenderBoard(computer.Board);

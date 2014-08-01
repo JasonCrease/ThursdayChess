@@ -48,6 +48,14 @@ namespace Thursday
             this.WhosMove = Colour.White;
         }
 
+        public bool MoverIsInCheck()
+        {
+            if (AllMoves.Any(x => S[x.To].PieceType == PieceType.King))
+                return true;
+            else
+                return false;
+        }
+
         public Board(Board oldBoard, int oldPos, int destPos)
         {
             this.WhosMove = oldBoard.WhosMove == Colour.Black ? Colour.White : Colour.Black;

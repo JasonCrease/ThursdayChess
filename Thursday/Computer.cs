@@ -24,10 +24,12 @@ namespace Thursday
     public class Computer
     {
         Board b;
+        private ZobristHasher m_Zasher;
 
         public Computer()
         {
             BuildInitialBoard();
+            m_Zasher = new ZobristHasher();
         }
 
         public void BuildInitialBoard()
@@ -35,7 +37,7 @@ namespace Thursday
             b = new Board();
             b.SetupStandardBoard();
         }
-        
+
         static Random rand = new Random();
         Colour WhosMove;
 
@@ -74,28 +76,45 @@ namespace Thursday
         {
             nodesVisited = 0;
             Move bestMoveYet = new Move(-1, -1);
-            double score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, 
-                                        WhosMove == Colour.White ? 1 : -1, ref bestMoveYet);
+            double score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1, ref bestMoveYet);
+           
             return bestMoveYet;
         }
 
         private const int MaxNegamaxDepth = 4;
+        private int hashUsed, hashNotUsed;
 
         private double Negamax(Board b, int depth, double alpha, double beta, int colour, ref Move bestMoveYet)
         {
+            Tuple<int, double> tuple = m_Zasher.GetDepthScoreTuple(b);
+            if (tuple != null && tuple.Item1 >= depth)
+            {
+                hashUsed++;
+                return colour * tuple.Item2;
+            }
+
             if (depth == 0)
-                return colour * b.ScoreBoard();
+            {
+                double score = b.ScoreBoard();
+                m_Zasher.SetDepthScoreTuple(b, new Tuple<int, double>(depth, score));
+                hashNotUsed++;
+                return colour * score;
+            }
             else
             {
-                foreach(var move in b.AllMoves)
+                foreach (var move in b.AllMoves)
                 {
-                    double val = -Negamax(b.MakeMove(move.From, move.To), depth - 1, -beta, -alpha, -colour, ref bestMoveYet);
+                    Board boardAfterMove = b.MakeMove(move.From, move.To);
+                    double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour, ref bestMoveYet);
+
+                    m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth, colour * score));
+
                     nodesVisited++;
-                    if (val >= beta)
-                        return val;
-                    if (val > alpha)
+                    if (score >= beta)
+                        return score;
+                    if (score > alpha)
                     {
-                        alpha = val;
+                        alpha = score;
                         if (depth == MaxNegamaxDepth) bestMoveYet = move;
                     }
                 }
@@ -114,6 +133,9 @@ namespace Thursday
             betaSkips = 0;
             Move bestMoveYet = new Move(-1, -1);
             double score = AlphaBeta(b, MaxAlphaBetaDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1, ref bestMoveYet);
+
+            bool bawge = b.MoverIsInCheck();
+
             return bestMoveYet;
         }
 
@@ -127,13 +149,13 @@ namespace Thursday
                 {
                     foreach (var move in b.AllMoves)
                     {
-                        double result =  AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
+                        double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
                         nodesVisited++;
 
                         if (result > alpha)
                         {
                             alpha = result;
-                            if(depth == MaxAlphaBetaDepth) bestMoveYet = move;
+                            if (depth == MaxAlphaBetaDepth) bestMoveYet = move;
                         }
                         if (beta <= alpha)
                         {
@@ -190,10 +212,12 @@ namespace Thursday
 
         public Board Board
         {
-            get {
+            get
+            {
                 return b;
             }
-            set {
+            set
+            {
                 b = value;
             }
         }
