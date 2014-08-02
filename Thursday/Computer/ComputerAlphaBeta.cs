@@ -30,8 +30,9 @@ namespace Thursday
             {
                 if (colour == 1)
                 {
-                    foreach (var move in b.AllMoves)
+                    for (int i = 0; i < b.AllMovesCount; i++)
                     {
+                        Move move = b.AllMoves[i];
                         double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
                         nodesVisited++;
 
@@ -51,8 +52,9 @@ namespace Thursday
                 }
                 else if (colour == -1)
                 {
-                    foreach (var move in b.AllMoves)
+                    for (int i = 0; i < b.AllMovesCount; i++)
                     {
+                        Move move = b.AllMoves[i];
                         double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
                         nodesVisited++;
 

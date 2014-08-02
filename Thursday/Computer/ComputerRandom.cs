@@ -11,7 +11,7 @@ namespace Thursday
 
         public override Move ComputeBestMove()
         {
-            int r = rand.Next(0, b.AllMoves.Count);
+            int r = rand.Next(0, b.AllMovesCount);
 
             return new Move(b.AllMoves[r].From, b.AllMoves[r].To);
         }

@@ -44,6 +44,8 @@ namespace Thursday
                 this.S[i] = new Thursday.Piece(Colour.White, PieceType.Pawn);
             for (int i = 48; i < 56; i++)
                 this.S[i] = new Thursday.Piece(Colour.Black, PieceType.Pawn);
+            for (int i = 16; i < 48; i++)
+                this.S[i] = new Thursday.Piece(Colour.Blank, PieceType.Blank);
 
             this.WhosMove = Colour.White;
         }
@@ -144,14 +146,28 @@ namespace Thursday
         {
         }
 
-        private List<Move> m_AllPossibleMoves = null;
+        private Move[] m_AllPossibleMoves = null;
+        private int m_AllMovesCount = -1;
+        public int AllMovesCount { 
+            get {
+                if (m_AllMovesCount == -1)
+                {
+                    m_AllMovesCount = 0;
+                    m_AllPossibleMoves = new Move[218];
+                    EnumerateAllMoves();
+                }
 
-        public List<Move> AllMoves
+                return m_AllMovesCount; 
+            }
+        }
+
+        public Move[] AllMoves
         {
             get{
                 if (m_AllPossibleMoves == null)
                 {
-                    m_AllPossibleMoves = new List<Move>(300);
+                    m_AllMovesCount = 0;
+                    m_AllPossibleMoves = new Move[218];
                     EnumerateAllMoves();
                     //m_AllPossibleMoves = m_AllPossibleMoves.OrderByDescending(m => (new Board(this, m.From, m.To)).ScoreBoard()).ToList();
                 }
@@ -162,6 +178,8 @@ namespace Thursday
 
         private void EnumerateAllMoves()
         {
+            m_AllMovesCount = 0;
+
             for (int i = 0; i < 64; i++)
             {
                 if (S[i].PieceType != PieceType.Blank && S[i].Colour == WhosMove)
@@ -190,8 +208,11 @@ namespace Thursday
                             throw new ApplicationException();
                     }
 
-                    foreach (int j in S[i].ValidMoves)
-                        m_AllPossibleMoves.Add(new Move(i, j));
+                    for (int j = 0; j < S[i].MoveCount; j++)
+                    {
+                        m_AllPossibleMoves[m_AllMovesCount] = new Move(i, S[i].ValidMoves[j]);
+                        m_AllMovesCount++;
+                    }
                 }
             }
         }
@@ -204,45 +225,45 @@ namespace Thursday
 
         private void EnumeratePawnMoves(int i)
         {
-            List<int> validMoves = S[i].ValidMoves;
+            Piece p = S[i];
 
             if (WhosMove == Colour.White)
             {
                 // Two-move start
                 if (Rank(i) == 1 && IsEmpty(i + 8) && IsEmpty(i + 16))
-                    validMoves.Add(i + 16);
+                    p.AddMove(i + 16);
                 // One-moves
                 if (IsEmpty(i + 8))
-                    validMoves.Add(i + 8);
+                    p.AddMove(i + 8);
                 // Take SW
                 if (ExistsAtOffset(i, 1, -1) && S[i + 7].PieceType != PieceType.Blank && S[i + 7].Colour == Colour.Black)
-                    validMoves.Add(i + 7);
+                    p.AddMove(i + 7);
                 // Take SE
                 if (ExistsAtOffset(i, 1, 1) && S[i + 9].PieceType != PieceType.Blank && S[i + 9].Colour == Colour.Black)
-                    validMoves.Add(i + 9);
+                    p.AddMove(i + 9);
                 if (EpSquare == i + 7)
-                    validMoves.Add(i + 7);
+                    p.AddMove(i + 7);
                 if (EpSquare == i + 9)
-                    validMoves.Add(i + 9);
+                    p.AddMove(i + 9);
             }
             else
             {
                 // Two-move start
                 if (Rank(i) == 6 && S[i - 8].PieceType == PieceType.Blank && S[i - 16].PieceType == PieceType.Blank)
-                    validMoves.Add(i - 16);
+                    p.AddMove(i - 16);
                 // One-moves
                 if (S[i - 8].PieceType == PieceType.Blank)
-                    validMoves.Add(i - 8);
+                    p.AddMove(i - 8);
                 // Take NE
                 if (ExistsAtOffset(i, -1, 1) && S[i - 7].PieceType != PieceType.Blank && S[i - 7].Colour == Colour.White)
-                    validMoves.Add(i - 7);
+                    p.AddMove(i - 7);
                 // Take NW
                 if (ExistsAtOffset(i, -1, -1) && S[i - 9].PieceType != PieceType.Blank && S[i - 9].Colour == Colour.White)
-                    validMoves.Add(i - 9);
+                    p.AddMove(i - 9);
                 if (EpSquare == i - 7)
-                    validMoves.Add(i - 7);
+                    p.AddMove(i - 7);
                 if (EpSquare == i - 9)
-                    validMoves.Add(i - 9);
+                    p.AddMove(i - 9);
             }
         }
 
@@ -251,7 +272,8 @@ namespace Thursday
 
         private void EnumerateKnightMoves(int i)
         {
-            List<int> validMoves = S[i].ValidMoves;
+            Piece p = S[i];
+            int[] validMoves = S[i].ValidMoves;
 
             for (int c = 0; c < 8; c++)
             {
@@ -261,11 +283,11 @@ namespace Thursday
                 int j = i + (xOff * 8) + yOff;
                 if (ExistsAtOffset(i, xOff, yOff))
                     if (IsEmptyAtOffset(i, xOff, yOff))
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     else
                     {
                         if (S[i].Colour != S[j].Colour)
-                            validMoves.Add(j);
+                            p.AddMove(j);
                     }
             }
         }
@@ -273,18 +295,18 @@ namespace Thursday
         private void EnumerateBishopMoves(int i)
         {
             Colour col = S[i].Colour;
-            List<int> validMoves = S[i].ValidMoves;
+            Piece p = S[i];
 
             // Slide piece NW until it hits something
             for (int offset = 1; ExistsAtOffset(i, -offset, -offset); offset++)
             {
                 int j = i - (offset * 8) - offset;
                 if (IsEmpty(j))
-                    validMoves.Add(j);
+                    p.AddMove(j);
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     break;
                 }
             }
@@ -294,11 +316,11 @@ namespace Thursday
             {
                 int j = i - (offset * 8) + offset;
                 if (IsEmpty(j))
-                    validMoves.Add(j);
+                    p.AddMove(j);
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     break;
                 }
             }
@@ -308,11 +330,11 @@ namespace Thursday
             {
                 int j = i + (offset * 8) - offset;
                 if (IsEmpty(j))
-                    validMoves.Add(j);
+                    p.AddMove(j);
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     break;
                 }
             }
@@ -323,11 +345,11 @@ namespace Thursday
             {
                 int j = i + (offset * 8) + offset;
                 if (IsEmpty(j))
-                    validMoves.Add(j);
+                    p.AddMove(j);
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     break;
                 }
             }
@@ -335,7 +357,7 @@ namespace Thursday
 
         private void EnumerateRookMoves(int i)
         {
-            List<int> validMoves = S[i].ValidMoves;
+            Piece p = S[i];
             Colour col = S[i].Colour;
             int j = 0;
 
@@ -343,11 +365,11 @@ namespace Thursday
             for (j = i - 8; j >= 0; j -= 8)
             {
                 if (S[j].PieceType == PieceType.Blank)
-                    validMoves.Add(j);
+                    p.AddMove(j);
                 else
                 {
                     if (j != i && S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     break;
                 }
             }
@@ -356,11 +378,11 @@ namespace Thursday
             for (j = i + 8; j < 64; j += 8)
             {
                 if (S[j].PieceType == PieceType.Blank)
-                    validMoves.Add(j);
+                    p.AddMove(j);
                 else
                 {
                     if (j != i && S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(j);
+                        p.AddMove(j);
                     break;
                 }
             }
@@ -369,11 +391,11 @@ namespace Thursday
             for (int offset = 1; ExistsAtOffset(i, 0, offset); offset++)
             {
                 if (IsEmpty(i + offset))
-                    validMoves.Add(i + offset);
+                    p.AddMove(i + offset);
                 else
                 {
                     if (S[i + offset].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(i + offset);
+                        p.AddMove(i + offset);
                     break;
                 }
             }
@@ -382,11 +404,11 @@ namespace Thursday
             for (int offset = -1; ExistsAtOffset(i, 0, offset); offset--)
             {
                 if (IsEmpty(i + offset))
-                    validMoves.Add(i + offset);
+                    p.AddMove(i + offset);
                 else
                 {
                     if (S[i + offset].Colour != col)  // If piece slide end is another colour, consider taking it
-                        validMoves.Add(i + offset);
+                        p.AddMove(i + offset);
                     break;
                 }
             }
@@ -394,43 +416,43 @@ namespace Thursday
 
         private void EnumerateKingMoves(int i)
         {
-            List<int> validMoves = S[i].ValidMoves;
+            Piece p = S[i];
 
             if (ExistsAtOffset(i, -1, -1) && IsEmptyOrEnemy(i - 9))
-                validMoves.Add((short)(i - 9));
+                p.AddMove((short)(i - 9));
             if (ExistsAtOffset(i, -1, 0) && IsEmptyOrEnemy(i - 8))
-                validMoves.Add((short)(i - 8));
+                p.AddMove((short)(i - 8));
             if (ExistsAtOffset(i, -1, 1) && IsEmptyOrEnemy(i - 7))
-                validMoves.Add((short)(i - 7));
+                p.AddMove((short)(i - 7));
 
             if (ExistsAtOffset(i, 0, -1) && IsEmptyOrEnemy(i - 1))
-                validMoves.Add((short)(i - 1));
+                p.AddMove((short)(i - 1));
             if (ExistsAtOffset(i, 0, 1) && IsEmptyOrEnemy(i + 1))
-                validMoves.Add((short)(i + 1));
+                p.AddMove((short)(i + 1));
 
             if (ExistsAtOffset(i, 1, -1) && IsEmptyOrEnemy(i + 7))
-                validMoves.Add((short)(i + 7));
+                p.AddMove((short)(i + 7));
             if (ExistsAtOffset(i, 1, 0) && IsEmptyOrEnemy(i + 8))
-                validMoves.Add((short)(i + 8));
+                p.AddMove((short)(i + 8));
             if (ExistsAtOffset(i, 1, 1) && IsEmptyOrEnemy(i + 9))
-                validMoves.Add((short)(i + 9));
+                p.AddMove((short)(i + 9));
 
             if (WhosMove == Colour.White && WhiteCanKCastle)
                 if (IsEmpty(1) && IsEmpty(2) && 
                     S[0].PieceType == PieceType.Rook && S[0].Colour == Colour.White)
-                    validMoves.Add(1);
+                    p.AddMove(1);
             if (WhosMove == Colour.White && WhiteCanQCastle)
                 if (IsEmpty(4) && IsEmpty(5) && IsEmpty(6) && 
                     S[7].PieceType == PieceType.Rook && S[7].Colour == Colour.White)
-                    validMoves.Add(5);
+                    p.AddMove(5);
             if (WhosMove == Colour.Black && BlackCanKCastle)
                 if (IsEmpty(57) && IsEmpty(58) && 
                     S[56].PieceType == PieceType.Rook && S[56].Colour == Colour.Black)
-                    validMoves.Add(57);
+                    p.AddMove(57);
             if (WhosMove == Colour.Black && BlackCanQCastle)
                 if (IsEmpty(60) && IsEmpty(61) && IsEmpty(62) && 
                     S[63].PieceType == PieceType.Rook && S[63].Colour == Colour.Black)
-                    validMoves.Add(61);
+                    p.AddMove(61);
         }
 
         private bool IsEmpty(int i)
@@ -461,7 +483,7 @@ namespace Thursday
         // 0-based: white rook starts at rank 0, file 0
         private static int Rank(int i)
         {
-            return Mailbox.Rank(i);
+            return Mailbox.Rank[i];
         }
 
         // 0-based: white rook starts at rank 0, file 0
@@ -481,14 +503,12 @@ namespace Thursday
 
             for (int i = 0; i < 64; i++)
             {
-                Piece p = S[i];
-
-                if (p.PieceType == PieceType.Blank)
+                if (S[i].PieceType == PieceType.Blank)
                     goto skip;
 
                 double pVal = 0;
 
-                pVal += PieceValue(p.PieceType);
+                pVal += PieceValue(S[i].PieceType);
                 pVal -= Math.Abs((double)File(i) - 3.5f) / 70f;  // favour central pieces
 
                 // Favour advanced pieces
@@ -502,7 +522,6 @@ namespace Thursday
                     pVal += (double)(7 - Rank(i)) / 20f;
                     score -= pVal;
                 }
-
 
                 skip: ;
             }

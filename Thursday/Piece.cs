@@ -5,29 +5,38 @@ using System.Text;
 
 namespace Thursday
 {
-    public struct Piece
+    public class Piece
     {
         public PieceType PieceType;
         public Colour Colour;
-        public List<int> ValidMoves;
-
-        public void AsShort()
-        {
-            ValidMoves = new List<int>(24);
-        }
+        public int[] ValidMoves;
+        public int MoveCount;
 
         public Piece(Colour colour, PieceType pieceType)
         {
-            ValidMoves = new List<int>(24);
+            MoveCount = 0;
+            int maxMoves = 5;
+
+            if (pieceType == PieceType.Bishop) maxMoves = 28;
+            else if (pieceType == PieceType.Rook) maxMoves = 14;
+            else if (pieceType == PieceType.Knight) maxMoves = 8;
+            else if (pieceType == PieceType.King) maxMoves = 10;
+            else if (pieceType == PieceType.Queen) maxMoves = 42;
+
+            ValidMoves = new int[maxMoves];
+
             Colour = colour;
             PieceType = pieceType;
         }
 
-        public Piece(Piece piece)
+        public Piece(Piece piece) : this(piece.Colour, piece.PieceType)
+        { 
+        }
+
+        public void AddMove(int i)
         {
-            ValidMoves = new List<int>(24);
-            this.Colour = piece.Colour;
-            this.PieceType = piece.PieceType;
+            ValidMoves[MoveCount] = i;
+            MoveCount++;
         }
     }
 }

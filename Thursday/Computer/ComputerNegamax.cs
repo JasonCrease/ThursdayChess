@@ -42,8 +42,9 @@ namespace Thursday
             }
             else
             {
-                foreach (var move in b.AllMoves)
+                for (int i = 0; i < b.AllMovesCount; i++)
                 {
+                    Move move = b.AllMoves[i];
                     Board boardAfterMove = b.MakeMove(move.From, move.To);
                     double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 

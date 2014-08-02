@@ -137,6 +137,7 @@ namespace ThursdayUI
                         piece = board.S[i * 8 + j];
 
                     Colour squareColour = i % 2 == j % 2 ? Colour.White : Colour.Black;
+
                     pieceBoxes[j, i].Source = PieceImages.For(piece.Colour, squareColour, piece.PieceType);
                 }
 
