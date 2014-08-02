@@ -32,11 +32,11 @@ namespace Thursday
 
             for (int i = 0; i < 64; i++)
             {
-                int pieceType = (int)b.S[i].PieceType;
-                int pieceColour = (int)b.S[i].Colour;
-
-                if (pieceType != 0)
+                if (b.S[i] != null)
                 {
+                    int pieceType = (int)b.S[i].PieceType;
+                    int pieceColour = (int)b.S[i].Colour;
+
                     int j = ((pieceType - 1) * 2) + pieceColour;
                     h = h ^ m_Hs[i, j];
                 }

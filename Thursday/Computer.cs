@@ -13,6 +13,11 @@ namespace Thursday
         protected List<Tuple<Move, double>> m_RankedMoves;
         protected int nodesVisited;
 
+        public List<Tuple<Move, double>> RankedMoves
+        {
+            get { return m_RankedMoves;  }
+        }
+
         public bool IsThinking { get; private set; }
 
         public Board Board

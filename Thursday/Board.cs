@@ -45,14 +45,14 @@ namespace Thursday
             for (int i = 48; i < 56; i++)
                 this.S[i] = new Thursday.Piece(Colour.Black, PieceType.Pawn);
             for (int i = 16; i < 48; i++)
-                this.S[i] = new Thursday.Piece(Colour.Blank, PieceType.Blank);
+                this.S[i] = null;
 
             this.WhosMove = Colour.White;
         }
 
         public bool MoverIsInCheck()
         {
-            if (AllMoves.Any(x => S[x.To].PieceType == PieceType.King))
+            if (AllMoves.Any(x => S[x.To] != null && S[x.To].PieceType == PieceType.King && S[x.To].Colour == WhosMove))
                 return true;
             else
                 return false;
@@ -67,8 +67,11 @@ namespace Thursday
             this.WhiteCanKCastle = oldBoard.WhiteCanKCastle;
 
             for (int i = 0; i < 64; i++)
-                S[i] = new Piece(oldBoard.S[i]);
-            
+            {
+                if (oldBoard.S[i] != null)
+                    S[i] = new Piece(oldBoard.S[i]);
+            }
+
             PieceType pieceType = S[oldPos].PieceType;
             
             // Handle queening and castle prevention
@@ -87,12 +90,12 @@ namespace Thursday
                     BlackCanKCastle = false;
                     if (destPos == oldPos + 2)   //Q-side castle move rook
                     {
-                        S[63] = new Piece(Colour.Black, PieceType.Blank);
+                        S[63] = null; //new Piece(Colour.Black, PieceType.Blank);
                         S[60] = new Piece(Colour.Black, PieceType.Rook);
                     }
                     if (destPos == oldPos - 2)   //K-side castle move rook
                     {
-                        S[56] = new Piece(Colour.Black, PieceType.Blank);
+                        S[56] = null; //new Piece(Colour.Black, PieceType.Blank);
                         S[58] = new Piece(Colour.Black, PieceType.Rook);
                     }
                 }
@@ -116,12 +119,12 @@ namespace Thursday
                     WhiteCanKCastle = false;
                     if (destPos == oldPos + 2)   //Q-side castle move rook
                     {
-                        S[7] = new Piece(Colour.White, PieceType.Blank);
+                        S[7] = null; //new Piece(Colour.White, PieceType.Blank);
                         S[4] = new Piece(Colour.White, PieceType.Rook);
                     }
                     if (destPos == oldPos - 2)   //K-side castle move rook
                     {
-                        S[0] = new Piece(Colour.White, PieceType.Blank);
+                        S[0] = null; //new Piece(Colour.White, PieceType.Blank);
                         S[2] = new Piece(Colour.White, PieceType.Rook);
                     }
                 }
@@ -134,12 +137,12 @@ namespace Thursday
             if (destPos == oldBoard.EpSquare && pieceType == PieceType.Pawn)
             {
                 if (WhosMove == Colour.Black)
-                    S[oldBoard.EpSquare - 8] = new Piece(Colour.Blank, PieceType.Blank);
+                    S[oldBoard.EpSquare - 8] = null; // new Piece(Colour.Blank, PieceType.Blank);
                 if (WhosMove == Colour.White)
-                    S[oldBoard.EpSquare + 8] = new Piece(Colour.Blank, PieceType.Blank);
+                    S[oldBoard.EpSquare + 8] = null; //Piece(Colour.Blank, PieceType.Blank);
             }
             S[destPos] = new Piece(S[oldPos]);
-            S[oldPos] = new Piece(Colour.Blank, PieceType.Blank);
+            S[oldPos] = null; //new Piece(Colour.Blank, PieceType.Blank);
         }
 
         public Board()
@@ -182,7 +185,7 @@ namespace Thursday
 
             for (int i = 0; i < 64; i++)
             {
-                if (S[i].PieceType != PieceType.Blank && S[i].Colour == WhosMove)
+                if (S[i] != null && S[i].Colour == WhosMove)
                 {
                     switch (S[i].PieceType)
                     {
@@ -236,10 +239,10 @@ namespace Thursday
                 if (IsEmpty(i + 8))
                     p.AddMove(i + 8);
                 // Take SW
-                if (ExistsAtOffset(i, 1, -1) && S[i + 7].PieceType != PieceType.Blank && S[i + 7].Colour == Colour.Black)
+                if (ExistsAtOffset(i, 1, -1) && S[i + 7] != null && S[i + 7].Colour == Colour.Black)
                     p.AddMove(i + 7);
                 // Take SE
-                if (ExistsAtOffset(i, 1, 1) && S[i + 9].PieceType != PieceType.Blank && S[i + 9].Colour == Colour.Black)
+                if (ExistsAtOffset(i, 1, 1) && S[i + 9] != null && S[i + 9].Colour == Colour.Black)
                     p.AddMove(i + 9);
                 if (EpSquare == i + 7)
                     p.AddMove(i + 7);
@@ -249,16 +252,16 @@ namespace Thursday
             else
             {
                 // Two-move start
-                if (Rank(i) == 6 && S[i - 8].PieceType == PieceType.Blank && S[i - 16].PieceType == PieceType.Blank)
+                if (Rank(i) == 6 && S[i - 8] == null && S[i - 16] == null)
                     p.AddMove(i - 16);
                 // One-moves
-                if (S[i - 8].PieceType == PieceType.Blank)
+                if (S[i - 8] == null)
                     p.AddMove(i - 8);
                 // Take NE
-                if (ExistsAtOffset(i, -1, 1) && S[i - 7].PieceType != PieceType.Blank && S[i - 7].Colour == Colour.White)
+                if (ExistsAtOffset(i, -1, 1) && S[i - 7] != null && S[i - 7].Colour == Colour.White)
                     p.AddMove(i - 7);
                 // Take NW
-                if (ExistsAtOffset(i, -1, -1) && S[i - 9].PieceType != PieceType.Blank && S[i - 9].Colour == Colour.White)
+                if (ExistsAtOffset(i, -1, -1) && S[i - 9] != null && S[i - 9].Colour == Colour.White)
                     p.AddMove(i - 9);
                 if (EpSquare == i - 7)
                     p.AddMove(i - 7);
@@ -364,7 +367,7 @@ namespace Thursday
             // Slide piece north until it hits something
             for (j = i - 8; j >= 0; j -= 8)
             {
-                if (S[j].PieceType == PieceType.Blank)
+                if (S[j] == null)
                     p.AddMove(j);
                 else
                 {
@@ -377,7 +380,7 @@ namespace Thursday
             // Slide piece south until it hits something
             for (j = i + 8; j < 64; j += 8)
             {
-                if (S[j].PieceType == PieceType.Blank)
+                if (S[j] == null)
                     p.AddMove(j);
                 else
                 {
@@ -457,22 +460,23 @@ namespace Thursday
 
         private bool IsEmpty(int i)
         {
-            return S[i].PieceType == PieceType.Blank;
+            return S[i] == null; // return S[i].PieceType == PieceType.Blank;
         }
 
         private bool IsEmptyOrEnemy(int i)
         {
-            return S[i].PieceType == PieceType.Blank || S[i].Colour != WhosMove;
+            return S[i] == null || S[i].Colour != WhosMove;
         }
 
         private bool IsEmpty(int y, int x)
         {
-            return S[(y * 8) + x].PieceType == PieceType.Blank;
+            return S[(y * 8) + x] == null; //.PieceType == PieceType.Blank;
         }
 
         private bool IsEmptyAtOffset(int i, int y, int x)
         {
-            return S[i + (y * 8) + x].PieceType == PieceType.Blank;
+            return S[i + (y * 8) + x] == null;
+            //return S[i + (y * 8) + x].PieceType == PieceType.Blank;
         }
 
         private bool ExistsAtOffset(int startSquare, int dirY, int dirX)
@@ -503,7 +507,7 @@ namespace Thursday
 
             for (int i = 0; i < 64; i++)
             {
-                if (S[i].PieceType == PieceType.Blank)
+                if (S[i] == null)
                     goto skip;
 
                 double pVal = 0;
