@@ -21,7 +21,7 @@ namespace Thursday
                 throw new ApplicationException();
         }
 
-        private const int MaxNegamaxDepth = 3;
+        private const int MaxNegamaxDepth = 4;
         private int hashUsed, hashNotUsed;
 
         private double Negamax(Board b, int depth, double alpha, double beta, int colour)

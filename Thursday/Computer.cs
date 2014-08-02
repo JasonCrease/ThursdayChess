@@ -5,152 +5,33 @@ using System.Text;
 
 namespace Thursday
 {
-    public enum Colour
-    {
-        White, Black, Blank
-    }
-
-    public enum PieceType
-    {
-        Blank = 0,
-        Pawn = 1,
-        Knight = 2,
-        Bishop = 3,
-        Rook = 4,
-        Queen = 5,
-        King = 6
-    }
-
     public abstract class Computer
     {
         protected Board b;
         protected ZobristHasher m_Zasher;
-        static Random rand = new Random();
         protected Colour WhosMove;
+        protected List<Tuple<Move, double>> m_RankedMoves;
+        protected int nodesVisited;
+
+        public bool IsThinking { get; private set; }
+
+        public Board Board
+        {
+            get { return b; }
+            set { b = value; }
+        }
 
         public Computer()
         {
             BuildInitialBoard();
             m_Zasher = new ZobristHasher();
+            m_RankedMoves = new List<Tuple<Move, double>>();
         }
 
         public void BuildInitialBoard()
         {
             b = new Board();
             b.SetupStandardBoard();
-        }
-
-
-        public Move ComputeOneMoveLookaheadMove()
-        {
-            var moveScores = new List<Tuple<Move, double>>();
-
-            foreach (Move move in b.AllMoves)
-            {
-                Board bd = b.MakeMove(move.From, move.To);
-                double score = bd.ScoreBoard();
-                moveScores.Add(new Tuple<Move, double>(move, score));
-            }
-
-            var bestMove = moveScores[0];
-
-            if (WhosMove == Colour.White)
-            {
-                foreach (var move in moveScores)
-                    if (move.Item2 < bestMove.Item2)
-                        bestMove = move;
-                //bestMove = moveScores.OrderByDescending(x => x.Item2).First().Item1;
-            }
-            if (WhosMove == Colour.Black)
-            {
-                foreach (var move in moveScores)
-                    if (move.Item2 > bestMove.Item2)
-                        bestMove = move;
-                //bestMove = moveScores.OrderBy(x => x.Item2).First().Item1;
-            }
-
-            return bestMove.Item1;
-        }
-
-        protected List<Tuple<Move, double>> m_RankedMoves = new List<Tuple<Move, double>>();
-
-
-        private const int MaxAlphaBetaDepth = 3;
-        protected int nodesVisited;
-        private int betaSkips = 0;
-
-        public Move ComputeAlphaBetaMove()
-        {
-            nodesVisited = 0;
-            betaSkips = 0;
-            Move bestMoveYet = new Move(-1, -1);
-            double score = AlphaBeta(b, MaxAlphaBetaDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1, ref bestMoveYet);
-
-            bool bawge = b.MoverIsInCheck();
-
-            return bestMoveYet;
-        }
-
-        private double AlphaBeta(Board b, int depth, double alpha, double beta, int colour, ref Move bestMoveYet)
-        {
-            if (depth == 0)
-                return b.ScoreBoard();
-            else
-            {
-                if (colour == 1)
-                {
-                    foreach (var move in b.AllMoves)
-                    {
-                        double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
-                        nodesVisited++;
-
-                        if (result > alpha)
-                        {
-                            alpha = result;
-                            if (depth == MaxAlphaBetaDepth) bestMoveYet = move;
-                        }
-                        if (beta <= alpha)
-                        {
-                            betaSkips++;
-                            goto skip1;
-                        }
-                    }
-                skip1:
-                    return alpha;
-                }
-                else if (colour == -1)
-                {
-                    foreach (var move in b.AllMoves)
-                    {
-                        double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
-                        nodesVisited++;
-
-                        if (result < beta)
-                        {
-                            beta = result;
-                            if (depth == MaxAlphaBetaDepth) bestMoveYet = move;
-                            //bestMoveYet = move;
-                        }
-                        if (beta <= alpha)
-                        {
-                            betaSkips++;
-                            goto skip2;
-                        }
-                    }
-                skip2:
-                    return beta;
-                }
-                else throw new ApplicationException();
-            }
-
-            throw new ApplicationException();
-        }
-
-        public Tuple<int, int> ComputeRandomMove()
-        {
-            int r = rand.Next(0, b.AllMoves.Count);
-
-            return new Tuple<int, int>(b.AllMoves[r].From, b.AllMoves[r].To);
         }
 
         public void MakeMove(int fromPos, int toPos)
@@ -162,25 +43,15 @@ namespace Thursday
             WhosMove = Board.WhosMove;
         }
 
-        public Board Board
-        {
-            get
-            {
-                return b;
-            }
-            set
-            {
-                b = value;
-            }
-        }
-
         public abstract Move ComputeBestMove();
 
         public void CalculateAndMakeMoveAsync(Action MoveCalculated)
         {
+            IsThinking = true;
             Move m = ComputeBestMove();
             MakeMove(m.From, m.To);
             MoveCalculated();
+            IsThinking = false;
         }
     }
 }

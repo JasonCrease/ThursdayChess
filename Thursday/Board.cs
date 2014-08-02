@@ -151,7 +151,7 @@ namespace Thursday
             get{
                 if (m_AllPossibleMoves == null)
                 {
-                    m_AllPossibleMoves = new List<Move>();
+                    m_AllPossibleMoves = new List<Move>(300);
                     EnumerateAllMoves();
                     //m_AllPossibleMoves = m_AllPossibleMoves.OrderByDescending(m => (new Board(this, m.From, m.To)).ScoreBoard()).ToList();
                 }
@@ -458,13 +458,14 @@ namespace Thursday
             return Mailbox.X1012[Mailbox.X88[startSquare] + (dirY * 10) + dirX] >= 0;
         }
 
-
-        private int Rank(int i)
+        // 0-based: white rook starts at rank 0, file 0
+        private static int Rank(int i)
         {
-            return ((int)(i / 8));
+            return Mailbox.Rank(i);
         }
 
-        private int File(int i)
+        // 0-based: white rook starts at rank 0, file 0
+        private static int File(int i)
         {
             return i % 8;
         }

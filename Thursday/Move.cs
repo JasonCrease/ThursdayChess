@@ -12,26 +12,17 @@ namespace Thursday
         QCastle,
         KCastle,
         Promotion
-    }
+   } 
 
     public struct Move
     {
         public int From;
         public int To;
-        public MoveType MoveType;
 
         public Move(int from, int to)
         {
             From = from;
             To = to;
-            MoveType = MoveType.Simple;
-        }
-
-        public Move(int from, int to, MoveType moveType)
-        {
-            From = from;
-            To = to;
-            MoveType = moveType;
         }
     }
 }

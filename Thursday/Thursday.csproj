@@ -40,12 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComputerNegamax.cs" />
+    <Compile Include="Computer\ComputerAlphaBeta.cs" />
+    <Compile Include="Computer\ComputerRandom.cs" />
+    <Compile Include="Computer\ComputerNegamax.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="Mailbox.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Piece.cs" />
+    <Compile Include="PieceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZobristHasher.cs" />
   </ItemGroup>
