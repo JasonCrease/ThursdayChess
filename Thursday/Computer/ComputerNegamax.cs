@@ -21,7 +21,7 @@ namespace Thursday
                 throw new ApplicationException();
         }
 
-        private const int MaxNegamaxDepth = 5;
+        private const int MaxNegamaxDepth = 4;
         private int hashUsed, hashNotUsed;
 
         private double Negamax(Board b, int depth, double alpha, double beta, int colour)
@@ -48,7 +48,7 @@ namespace Thursday
                     Board boardAfterMove = b.MakeMove(move.From, move.To);
                     double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 
-                    //m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth, colour * score));
+                    m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth, score));
 
                     nodesVisited++;
                     if (score >= beta)
