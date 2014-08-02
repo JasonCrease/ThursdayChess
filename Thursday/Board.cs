@@ -507,7 +507,7 @@ namespace Thursday
             }
 
             //score += CalculateKingSafety();
-            score += (this.AllMoves.Count() / 1000f * (WhosMove == Colour.White ? 1f : -1f));
+            score += (this.AllMoves.Count() / 200f * (WhosMove == Colour.White ? 1f : -1f));
 
             return score;
         }

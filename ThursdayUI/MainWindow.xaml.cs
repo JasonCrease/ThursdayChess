@@ -29,7 +29,7 @@ namespace ThursdayUI
         {
             InitializeComponent();
             CreatePieceBoxes();
-            computer = new Computer();
+            computer = new ComputerNegamax();
             RenderBoard(computer.Board);
         }
 
@@ -39,19 +39,19 @@ namespace ThursdayUI
 
         public static class PieceStrings
         {
-            public static string WPawn   = "\u2659";
+            public static string WPawn = "\u2659";
             public static string WKnight = "\u2658";
             public static string WBishop = "\u2657";
-            public static string WRook   = "\u2656";
-            public static string WQueen  = "\u2655";
-            public static string WKing   = "\u2654";
+            public static string WRook = "\u2656";
+            public static string WQueen = "\u2655";
+            public static string WKing = "\u2654";
 
-            public static string BPawn   = "\u265F";
+            public static string BPawn = "\u265F";
             public static string BKnight = "\u265E";
             public static string BBishop = "\u265D";
-            public static string BRook   = "\u265C";
-            public static string BQueen  = "\u265B";
-            public static string BKing   = "\u265A";
+            public static string BRook = "\u265C";
+            public static string BQueen = "\u265B";
+            public static string BKing = "\u265A";
         }
 
         public static class PieceImages
@@ -134,7 +134,7 @@ namespace ThursdayUI
                     else return bsq;
                 }
 
-                throw new ApplicationException();  
+                throw new ApplicationException();
             }
         }
 
@@ -195,22 +195,26 @@ namespace ThursdayUI
             try
             {
                 computer.MakeMove(oldPos, destPos);
-                //Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(RenderBoard), computer.Board);
-                //RenderBoard(computer.Board);
-                Move bestMove = computer.ComputeNegamaxMove();
-                computer.MakeMove(bestMove.From, bestMove.To);
-                labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
                 RenderBoard(computer.Board);
+                computer.CalculateAndMakeMoveAsync(RenderBoardAsync);
             }
-            catch (ApplicationException e)
+            catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.ToString());
+            }
+            finally
+            {
+                fromImage.Opacity = 1f;
+                fromImage = null;
+                toImage.Opacity = 1f;
+                toImage = null;
             }
 
-            fromImage.Opacity = 1f;
-            fromImage = null;
-            toImage.Opacity = 1f;
-            toImage = null;
+        }
+
+        public void RenderBoardAsync()
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(RenderBoard), computer.Board);
         }
 
         private void buttonGo_Click(object sender, RoutedEventArgs e)
@@ -241,7 +245,7 @@ namespace ThursdayUI
 
         private void buttonNext_Click(object sender, RoutedEventArgs e)
         {
-            Move bestMove = computer.ComputeNegamaxMove();
+            Move bestMove = computer.ComputeBestMove();
             computer.MakeMove(bestMove.From, bestMove.To);
             labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
             RenderBoard(computer.Board);
