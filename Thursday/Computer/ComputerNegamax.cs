@@ -13,6 +13,12 @@ namespace Thursday
             m_RankedMoves = new List<Tuple<Move, double>>();
             double score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
+            if (m_RankedMoves.Count() == 0)
+                if(b.YouCanTakeOpponentsKing())
+                    throw new ApplicationException("Checkmate!");
+                else
+                    throw new ApplicationException("Stalemate!");
+
             if (WhosMove == Colour.Black)
                 return m_RankedMoves.OrderBy(x => x.Item2).First().Item1;
             else if (WhosMove == Colour.White)
