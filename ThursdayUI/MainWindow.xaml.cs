@@ -68,7 +68,7 @@ namespace ThursdayUI
             if (!computer.IsThinking)
             {
                 Image image = sender as Image;
-                image.Opacity = 0.8f;
+                image.Opacity = 0.6f;
                 image.UpdateLayout();
 
                 if (fromImage == null)

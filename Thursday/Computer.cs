@@ -49,14 +49,12 @@ namespace Thursday
         }
 
         public abstract Move ComputeBestMove();
+        public abstract void ComputeAndMakeBestMove(object MoveCalculated);
 
         public void CalculateAndMakeMoveAsync(Action MoveCalculated)
         {
-            IsThinking = true;
-            Move m = ComputeBestMove();
-            MakeMove(m.From, m.To);
-            MoveCalculated();
-            IsThinking = false;
+            System.Threading.Thread t = new System.Threading.Thread(ComputeAndMakeBestMove);
+            t.Start(MoveCalculated);
         }
     }
 }

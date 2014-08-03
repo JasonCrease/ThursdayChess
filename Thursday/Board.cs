@@ -441,19 +441,19 @@ namespace Thursday
                 p.AddMove((short)(i + 9));
 
             if (WhosMove == Colour.White && WhiteCanKCastle)
-                if (IsEmpty(1) && IsEmpty(2) && 
+                if (IsEmpty(1) && IsEmpty(2) && S[0] !=null &&
                     S[0].PieceType == PieceType.Rook && S[0].Colour == Colour.White)
                     p.AddMove(1);
             if (WhosMove == Colour.White && WhiteCanQCastle)
-                if (IsEmpty(4) && IsEmpty(5) && IsEmpty(6) && 
+                if (IsEmpty(4) && IsEmpty(5) && IsEmpty(6) && S[7] != null &&
                     S[7].PieceType == PieceType.Rook && S[7].Colour == Colour.White)
                     p.AddMove(5);
             if (WhosMove == Colour.Black && BlackCanKCastle)
-                if (IsEmpty(57) && IsEmpty(58) && 
+                if (IsEmpty(57) && IsEmpty(58) && S[56] !=null &&
                     S[56].PieceType == PieceType.Rook && S[56].Colour == Colour.Black)
                     p.AddMove(57);
             if (WhosMove == Colour.Black && BlackCanQCastle)
-                if (IsEmpty(60) && IsEmpty(61) && IsEmpty(62) && 
+                if (IsEmpty(60) && IsEmpty(61) && IsEmpty(62) && S[63] != null && 
                     S[63].PieceType == PieceType.Rook && S[63].Colour == Colour.Black)
                     p.AddMove(61);
         }

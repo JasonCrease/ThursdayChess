@@ -6,7 +6,14 @@ using System.Text;
 namespace Thursday
 {
     public class ComputerNegamax : Computer
-    {   
+    {
+        public override void ComputeAndMakeBestMove(object MoveCalculated)
+        {
+            Action action = (Action)MoveCalculated;
+            Move m = ComputeBestMove();
+            this.MakeMove(m.From, m.To);
+            action();
+        }
         public override Move ComputeBestMove()
         {
             nodesVisited = 0;
@@ -48,7 +55,7 @@ namespace Thursday
                     Board boardAfterMove = b.MakeMove(move.From, move.To);
                     double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 
-                    m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth, score));
+                    //m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth, score));
 
                     nodesVisited++;
                     if (score >= beta)

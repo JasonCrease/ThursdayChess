@@ -10,6 +10,10 @@ namespace Thursday
         private const int MaxAlphaBetaDepth = 3;
         private int betaSkips = 0;
 
+        public override void ComputeAndMakeBestMove(object MoveCalculated)
+        {
+            throw new NotImplementedException();
+        }
         public override Move ComputeBestMove()
         {
             nodesVisited = 0;
