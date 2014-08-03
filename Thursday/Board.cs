@@ -50,12 +50,16 @@ namespace Thursday
             this.WhosMove = Colour.White;
         }
 
-        public bool MoverIsInCheck()
+        public bool YouCanTakeOpponentsKing()
         {
-            if (AllMoves.Any(x => S[x.To] != null && S[x.To].PieceType == PieceType.King && S[x.To].Colour == WhosMove))
-                return true;
-            else
-                return false;
+            for (int i = 0; i < AllMovesCount; i++ )
+            { 
+                Move m = AllMoves[i];
+                if (S[m.To] != null && S[m.To].PieceType == PieceType.King && S[m.To].Colour != WhosMove)
+                    return true;
+            }
+
+            return false;
         }
 
         public Board(Board oldBoard, int oldPos, int destPos)
@@ -606,6 +610,7 @@ namespace Thursday
             if (fromPos == toPos) return false;
             if (!S[fromPos].ValidMoves.Contains(toPos)) return false;
             if (S[fromPos].Colour != WhosMove) return false;
+            if (new Board(this, fromPos, toPos).YouCanTakeOpponentsKing()) return false;
 
             return true;
         }

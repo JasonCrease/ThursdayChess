@@ -10,18 +10,12 @@ namespace Thursday
         private const int MaxAlphaBetaDepth = 3;
         private int betaSkips = 0;
 
-        public override void ComputeAndMakeBestMove(object MoveCalculated)
-        {
-            throw new NotImplementedException();
-        }
         public override Move ComputeBestMove()
         {
             nodesVisited = 0;
             betaSkips = 0;
             Move bestMoveYet = new Move(-1, -1);
             double score = AlphaBeta(b, MaxAlphaBetaDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1, ref bestMoveYet);
-
-            bool bawge = b.MoverIsInCheck();
 
             return bestMoveYet;
         }

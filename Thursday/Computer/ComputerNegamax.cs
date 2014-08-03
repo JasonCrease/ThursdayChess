@@ -7,13 +7,6 @@ namespace Thursday
 {
     public class ComputerNegamax : Computer
     {
-        public override void ComputeAndMakeBestMove(object MoveCalculated)
-        {
-            Action action = (Action)MoveCalculated;
-            Move m = ComputeBestMove();
-            this.MakeMove(m.From, m.To);
-            action();
-        }
         public override Move ComputeBestMove()
         {
             nodesVisited = 0;
@@ -67,7 +60,7 @@ namespace Thursday
 
                     if (depth == MaxNegamaxDepth)
                     {
-                        if (!boardAfterMove.MoverIsInCheck())
+                        if (!boardAfterMove.YouCanTakeOpponentsKing())
                             m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
                     }
                 }

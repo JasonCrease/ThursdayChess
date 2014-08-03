@@ -18,7 +18,8 @@
             <Button Content="Restart" Height="49" HorizontalAlignment="Left" Name="buttonGo" VerticalAlignment="Top" Width="218" Click="buttonGo_Click" FontSize="20" />
             <Button Content="Flip board" Height="49" HorizontalAlignment="Left" Name="buttonFlip" VerticalAlignment="Top" Width="218" Click="buttonFlip_Click" FontSize="20" />
             <Button Content="Computer make move" Height="51" HorizontalAlignment="Left" Name="buttonNext" VerticalAlignment="Top" Width="218" Click="buttonNext_Click" FontSize="20" />
-            <Label Content="xxxx" Height="28" HorizontalAlignment="Left" Name="labelScoreBoard" VerticalAlignment="Top" Width="79" />
+            <Label Content="0.00" Height="28" HorizontalAlignment="Left" Name="labelScoreBoard" VerticalAlignment="Top" Width="79" />
+            <Label Content="Your turn" Height="28" HorizontalAlignment="Left" Name="labelWhosTurn" VerticalAlignment="Top" Width="79" />
             <Button Content="Score Board" Height="23" HorizontalAlignment="Left" Name="buttonScoreBoard" VerticalAlignment="Top" Width="75" Click="buttonScoreBoard_Click" />
         </StackPanel>
     </Grid>

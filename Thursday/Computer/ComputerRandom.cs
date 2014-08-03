@@ -9,10 +9,6 @@ namespace Thursday
     {
         static Random rand = new Random();
 
-        public override void ComputeAndMakeBestMove(object MoveCalculated)
-        {
-            throw new NotImplementedException();
-        }
         public override Move ComputeBestMove()
         {
             int r = rand.Next(0, b.AllMovesCount);

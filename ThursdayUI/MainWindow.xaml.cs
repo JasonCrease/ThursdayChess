@@ -98,6 +98,7 @@ namespace ThursdayUI
             {
                 computer.MakeMove(oldPos, destPos);
                 RenderBoard(computer.Board);
+                labelWhosTurn.Content = String.Format("Thinking");
                 computer.CalculateAndMakeMoveAsync(RenderBoardAsync);
             }
             catch (Exception e)
@@ -115,8 +116,16 @@ namespace ThursdayUI
 
         public void RenderBoardAsync()
         {
-            Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(RenderBoard), computer.Board);
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(UpdateUi), computer.Board);
         }
+
+        private void UpdateUi(Board board)
+        {
+            RenderBoard(board);
+            labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
+            labelWhosTurn.Content = String.Format("Your turn");
+        }
+
 
         private void buttonGo_Click(object sender, RoutedEventArgs e)
         {
