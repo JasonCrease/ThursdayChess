@@ -18,9 +18,20 @@
             <Button Content="Restart" Height="49" HorizontalAlignment="Left" Name="buttonGo" VerticalAlignment="Top" Width="218" Click="buttonGo_Click" FontSize="20" />
             <Button Content="Flip board" Height="49" HorizontalAlignment="Left" Name="buttonFlip" VerticalAlignment="Top" Width="218" Click="buttonFlip_Click" FontSize="20" />
             <Button Content="Computer make move" Height="51" HorizontalAlignment="Left" Name="buttonNext" VerticalAlignment="Top" Width="218" Click="buttonNext_Click" FontSize="20" />
-            <Label Content="0.00" Height="28" HorizontalAlignment="Left" Name="labelScoreBoard" VerticalAlignment="Top" Width="79" />
             <Label Content="Your turn" Height="28" HorizontalAlignment="Left" Name="labelWhosTurn" VerticalAlignment="Top" Width="79" />
-            <Button Content="Score Board" Height="23" HorizontalAlignment="Left" Name="buttonScoreBoard" VerticalAlignment="Top" Width="75" Click="buttonScoreBoard_Click" />
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Score" Height="28" HorizontalAlignment="Left" Name="labelScoreLabeller" VerticalAlignment="Top" Width="100" />
+                <Label Content="0.00" Height="28" HorizontalAlignment="Left" Name="labelScoreBoard" VerticalAlignment="Top" Width="70" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Compute time:" Height="28" HorizontalAlignment="Left" Name="labelTimeLabeller" VerticalAlignment="Top" Width="100" />
+                <Label Content="0.00s" Height="28" HorizontalAlignment="Left" Name="labelComputationTime" VerticalAlignment="Top" Width="70" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Difficulty:" Height="28" HorizontalAlignment="Left" Name="labelDifficulty" VerticalAlignment="Top" Width="100" />
+                <Slider Name="SliderDepth" Minimum="3" Maximum="5" Width="100" Value="4" ValueChanged="SliderDepth_ValueChanged"></Slider>
+            </StackPanel>
+            <Button Content="Score Board Now" Height="23" HorizontalAlignment="Left" Name="buttonScoreBoard" VerticalAlignment="Top" Width="Auto" Click="buttonScoreBoard_Click" />
         </StackPanel>
     </Grid>
 </Window>

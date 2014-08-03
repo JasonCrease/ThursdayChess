@@ -15,6 +15,7 @@ using System.Windows.Threading;
 using System.IO;
 
 using Thursday;
+using System.Threading;
 
 namespace ThursdayUI
 {
@@ -30,6 +31,7 @@ namespace ThursdayUI
             InitializeComponent();
             CreatePieceBoxes();
             computer = new ComputerNegamax();
+            computer.Difficulty = 4;
             RenderBoard(computer.Board);
         }
 
@@ -123,9 +125,10 @@ namespace ThursdayUI
         {
             RenderBoard(board);
             labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
+            if(!computer.IsThinking)
+                labelComputationTime.Content = String.Format("{0:0.00}s", (float)computer.MsTaken / 1000f);
             labelWhosTurn.Content = String.Format("Your turn");
         }
-
 
         private void buttonGo_Click(object sender, RoutedEventArgs e)
         {
@@ -161,19 +164,24 @@ namespace ThursdayUI
         {
             Move bestMove = computer.ComputeBestMove();
             computer.MakeMove(bestMove.From, bestMove.To);
-            labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
-            RenderBoard(computer.Board);
+            UpdateUi(computer.Board);
         }
 
         private void buttonFlip_Click(object sender, RoutedEventArgs e)
         {
             m_Flipped = !m_Flipped;
-            RenderBoard(computer.Board);
+            UpdateUi(computer.Board);
         }
 
         private void buttonScoreBoard_Click(object sender, RoutedEventArgs e)
         {
             labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
+        }
+
+        private void SliderDepth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(computer != null)
+                computer.Difficulty = (int)e.NewValue;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Thursday
         internal bool WhiteCanQCastle = true;
         internal bool WhiteCanKCastle = true;
 
-        internal int EpSquare = -1;
+        internal int EpSquare = -99;
 
         public Colour WhosMove;
 

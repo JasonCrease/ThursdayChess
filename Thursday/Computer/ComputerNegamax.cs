@@ -7,10 +7,13 @@ namespace Thursday
 {
     public class ComputerNegamax : Computer
     {
+        private int MaxNegamaxDepth;
+
         public override Move ComputeBestMove()
         {
             nodesVisited = 0;
             m_RankedMoves = new List<Tuple<Move, double>>();
+            MaxNegamaxDepth = this.Difficulty;
             double score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
             if (m_RankedMoves.Count() == 0)
@@ -27,7 +30,6 @@ namespace Thursday
                 throw new ApplicationException();
         }
 
-        private const int MaxNegamaxDepth = 4;
         private int hashUsed, hashNotUsed;
 
         private double Negamax(Board b, int depth, double alpha, double beta, int colour)
@@ -74,6 +76,5 @@ namespace Thursday
                 return alpha;
             }
         }
-
     }
 }

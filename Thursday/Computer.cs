@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -56,15 +57,25 @@ namespace Thursday
             t.Start(MoveCalculated);
         }
 
+        Stopwatch m_StopWatch = new Stopwatch();
+
         public void ComputeAndMakeBestMove(object MoveCalculatedAction)
         {
+            m_StopWatch.Reset();
+            m_StopWatch.Start();
             IsThinking = true;
+
             Action action = (Action)MoveCalculatedAction;
             Move m = ComputeBestMove();
             this.MakeMove(m.From, m.To);
+
             IsThinking = false;
+            m_StopWatch.Stop();
 
             action();
         }
+
+        public int Difficulty { get; set; }
+        public long MsTaken { get { return m_StopWatch.ElapsedMilliseconds; } }
     }
 }
