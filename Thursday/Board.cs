@@ -603,6 +603,7 @@ namespace Thursday
         internal bool MoveIsLegal(int fromPos, int toPos)
         {
             var dummy = AllMoves;
+            if (fromPos == toPos) return false;
             if (!S[fromPos].ValidMoves.Contains(toPos)) return false;
             if (S[fromPos].Colour != WhosMove) return false;
 
