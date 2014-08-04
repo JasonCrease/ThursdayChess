@@ -19,38 +19,48 @@ namespace ThursdayUI
 {
     class PieceImages
     {
-        static string imgDir = Directory.GetCurrentDirectory() + ".\\..\\..\\images\\";
+        static string imgDir;
 
-        public static BitmapImage bbp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbp.png")));
-        public static BitmapImage bbn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbn.png")));
-        public static BitmapImage bbb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbb.png")));
-        public static BitmapImage bbr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbr.png")));
-        public static BitmapImage bbk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbk.png")));
-        public static BitmapImage bbq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbq.png")));
+        static PieceImages()
+        {
+            imgDir = Directory.GetCurrentDirectory() + ".\\images\\";
+            if (!Directory.Exists(imgDir))
+                imgDir = Directory.GetCurrentDirectory() + ".\\..\\..\\images\\";
 
-        public static BitmapImage bwp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwp.png")));
-        public static BitmapImage bwn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwn.png")));
-        public static BitmapImage bwb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwb.png")));
-        public static BitmapImage bwr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwr.png")));
-        public static BitmapImage bwk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwk.png")));
-        public static BitmapImage bwq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwq.png")));
+            bbp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbp.png")));
+            bbn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbn.png")));
+            bbb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbb.png")));
+            bbr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbr.png")));
+            bbk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbk.png")));
+            bbq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bbq.png")));
 
-        public static BitmapImage wbp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbp.png")));
-        public static BitmapImage wbn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbn.png")));
-        public static BitmapImage wbb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbb.png")));
-        public static BitmapImage wbr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbr.png")));
-        public static BitmapImage wbk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbk.png")));
-        public static BitmapImage wbq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbq.png")));
+            bwp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwp.png")));
+            bwn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwn.png")));
+            bwb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwb.png")));
+            bwr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwr.png")));
+            bwk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwk.png")));
+            bwq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bwq.png")));
 
-        public static BitmapImage wwp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwp.png")));
-        public static BitmapImage wwn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwn.png")));
-        public static BitmapImage wwb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwb.png")));
-        public static BitmapImage wwr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwr.png")));
-        public static BitmapImage wwk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwk.png")));
-        public static BitmapImage wwq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwq.png")));
+            wbp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbp.png")));
+            wbn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbn.png")));
+            wbb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbb.png")));
+            wbr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbr.png")));
+            wbk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbk.png")));
+            wbq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wbq.png")));
 
-        public static BitmapImage bsq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bsq.png")));
-        public static BitmapImage wsq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wsq.png")));
+            wwp = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwp.png")));
+            wwn = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwn.png")));
+            wwb = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwb.png")));
+            wwr = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwr.png")));
+            wwk = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwk.png")));
+            wwq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wwq.png")));
+
+            bsq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "bsq.png")));
+            wsq = new BitmapImage(new Uri(System.IO.Path.Combine(imgDir, "wsq.png")));
+
+        }
+
+        public static BitmapImage bbp, bbn, bbb, bbr, bbk, bbq, bwp, bwn, bwb, bwr, bwk, bwq, wbp, wbn, wbb, wbr, wbk, wbq, wwp, wwn, wwb, wwr, wwk, wwq, bsq, wsq;
 
         public static BitmapImage For(Colour colour, Colour onColour, PieceType pieceType)
         {
