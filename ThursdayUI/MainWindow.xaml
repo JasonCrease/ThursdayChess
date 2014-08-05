@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ThursdayUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Thursday Chess" Height="430" Width="650" ResizeMode="NoResize"
+        Title="Thursday Chess" Height="430" Width="650" ResizeMode="CanMinimize"
         Icon="/black_chess.ico">
     <Grid>
         <Grid.RowDefinitions>
@@ -15,6 +15,7 @@
         <Canvas Name="boardCanvas" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="400" Grid.Column="0" Grid.Row="0"></Canvas>
 
         <StackPanel Grid.Column="1" Grid.Row="0">
+            <Button Content="Take Back" Height="49" HorizontalAlignment="Left" Name="buttonTakeBack" VerticalAlignment="Top" Width="218" Click="buttonTakeBack_Click" FontSize="20" />
             <Button Content="Restart" Height="49" HorizontalAlignment="Left" Name="buttonGo" VerticalAlignment="Top" Width="218" Click="buttonGo_Click" FontSize="20" />
             <Button Content="Flip board" Height="49" HorizontalAlignment="Left" Name="buttonFlip" VerticalAlignment="Top" Width="218" Click="buttonFlip_Click" FontSize="20" />
             <Button Content="Computer make move" Height="51" HorizontalAlignment="Left" Name="buttonNext" VerticalAlignment="Top" Width="218" Click="buttonNext_Click" FontSize="20" />

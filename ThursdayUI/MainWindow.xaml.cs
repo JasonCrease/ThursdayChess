@@ -183,5 +183,11 @@ namespace ThursdayUI
             if(computer != null)
                 computer.Difficulty = (int)e.NewValue;
         }
+
+        private void buttonTakeBack_Click(object sender, RoutedEventArgs e)
+        {
+            computer.TakeBack();
+            UpdateUi(computer.Board);
+        }
     }
 }

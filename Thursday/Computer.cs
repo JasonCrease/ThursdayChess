@@ -40,11 +40,23 @@ namespace Thursday
             b.SetupStandardBoard();
         }
 
+        private Stack<Board> m_OldBoards = new Stack<Board>();
+ 
+        public void TakeBack()
+        {
+            if (m_OldBoards.Any())
+            {
+                Board = m_OldBoards.Pop();
+                Board = m_OldBoards.Pop();
+            }
+        }
+
         public void MakeMove(int fromPos, int toPos)
         {
             if (!Board.MoveIsLegal(fromPos, toPos))
                 throw new ApplicationException("Move is illegal. Try another");
 
+            m_OldBoards.Push(Board);
             Board = Board.MakeMove(fromPos, toPos);
             WhosMove = Board.WhosMove;
         }
