@@ -11,10 +11,12 @@ namespace Thursday
 
         public override Move ComputeBestMove()
         {
+            double score = 0f;
             nodesVisited = 0;
             m_RankedMoves = new List<Tuple<Move, double>>();
             MaxNegamaxDepth = this.Difficulty;
-            double score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
+
+            score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
             if (m_RankedMoves.Count() == 0)
                 if(b.YouCanTakeOpponentsKing())
@@ -35,9 +37,11 @@ namespace Thursday
         private double Negamax(Board b, int depth, double alpha, double beta, int colour)
         {
             Tuple<int, double> tuple = m_Zasher.GetDepthScoreTuple(b);
-            if (tuple != null && tuple.Item1 >= depth)
+            // If the same or better calculation of this state has already been made, use it.
+            if (tuple != null && tuple.Item1 >= depth && depth < MaxNegamaxDepth)
             {
-                if (depth > 0) hashUsed++;
+                if (depth >  0) hashUsed++;
+                if (depth >= 0) hashUsed++;
                 return colour * tuple.Item2;
             }
 
@@ -56,7 +60,8 @@ namespace Thursday
                     Board boardAfterMove = b.MakeMove(move.From, move.To);
                     double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 
-                    //m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth, score));
+                    // Cache this score
+                    m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth - 1, colour * score));
 
                     nodesVisited++;
                     if (score >= beta)
@@ -69,7 +74,10 @@ namespace Thursday
                     if (depth == MaxNegamaxDepth)
                     {
                         if (!boardAfterMove.YouCanTakeOpponentsKing())
+                        {
                             m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
+                            m_Zasher.AddIfBetter(b, new Tuple<int, double>(depth, colour * score));
+                        }
                     }
                 }
 

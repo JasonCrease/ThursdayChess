@@ -7,6 +7,55 @@ namespace Thursday
 {
     public class Board
     {
+        internal static int[] X1012 = new int[120] {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1,  0,  1,  2,  3,  4,  5,  6,  7, -1,
+            -1,  8,  9, 10, 11, 12, 13, 14, 15, -1,
+            -1, 16, 17, 18, 19, 20, 21, 22, 23, -1,
+            -1, 24, 25, 26, 27, 28, 29, 30, 31, -1,
+            -1, 32, 33, 34, 35, 36, 37, 38, 39, -1,
+            -1, 40, 41, 42, 43, 44, 45, 46, 47, -1,
+            -1, 48, 49, 50, 51, 52, 53, 54, 55, -1,
+            -1, 56, 57, 58, 59, 60, 61, 62, 63, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+        };
+
+        internal static int[] X88 = new int[64]{
+            21, 22, 23, 24, 25, 26, 27, 28,
+            31, 32, 33, 34, 35, 36, 37, 38,
+            41, 42, 43, 44, 45, 46, 47, 48,
+            51, 52, 53, 54, 55, 56, 57, 58,
+            61, 62, 63, 64, 65, 66, 67, 68,
+            71, 72, 73, 74, 75, 76, 77, 78,
+            81, 82, 83, 84, 85, 86, 87, 88,
+            91, 92, 93, 94, 95, 96, 97, 98
+        };
+
+        internal static int[] poss = new int[64] {
+            0,  1,  2,  3,  4,  5,  6,  7,
+            8,  9, 10, 11, 12, 13, 14, 15, 
+            16, 17, 18, 19, 20, 21, 22, 23, 
+            24, 25, 26, 27, 28, 29, 30, 31, 
+            32, 33, 34, 35, 36, 37, 38, 39, 
+            40, 41, 42, 43, 44, 45, 46, 47,
+            48, 49, 50, 51, 52, 53, 54, 55,
+            56, 57, 58, 59, 60, 61, 62, 63
+        };
+
+
+        internal static int[] rank = {
+            0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1,
+            2,2,2,2,2,2,2,2,
+            3,3,3,3,3,3,3,3,
+            4,4,4,4,4,4,4,4,
+            5,5,5,5,5,5,5,5,
+            6,6,6,6,6,6,6,6,
+            7,7,7,7,7,7,7,7,
+        };
+
         public Piece[] S = new Piece[64];
 
         internal bool BlackIsInCheck;
@@ -22,28 +71,28 @@ namespace Thursday
 
         public void SetupStandardBoard()
         {
-            this.S[0] = new Thursday.Piece(Colour.White, PieceType.Rook);
-            this.S[1] = new Thursday.Piece(Colour.White, PieceType.Knight);
-            this.S[2] = new Thursday.Piece(Colour.White, PieceType.Bishop);
-            this.S[3] = new Thursday.Piece(Colour.White, PieceType.King);
-            this.S[4] = new Thursday.Piece(Colour.White, PieceType.Queen);
-            this.S[5] = new Thursday.Piece(Colour.White, PieceType.Bishop);
-            this.S[6] = new Thursday.Piece(Colour.White, PieceType.Knight);
-            this.S[7] = new Thursday.Piece(Colour.White, PieceType.Rook);
+            this.S[0] = new Piece(Colour.White, PieceType.Rook);
+            this.S[1] = new Piece(Colour.White, PieceType.Knight);
+            this.S[2] = new Piece(Colour.White, PieceType.Bishop);
+            this.S[3] = new Piece(Colour.White, PieceType.King);
+            this.S[4] = new Piece(Colour.White, PieceType.Queen);
+            this.S[5] = new Piece(Colour.White, PieceType.Bishop);
+            this.S[6] = new Piece(Colour.White, PieceType.Knight);
+            this.S[7] = new Piece(Colour.White, PieceType.Rook);
 
-            this.S[56] = new Thursday.Piece(Colour.Black, PieceType.Rook);
-            this.S[57] = new Thursday.Piece(Colour.Black, PieceType.Knight);
-            this.S[58] = new Thursday.Piece(Colour.Black, PieceType.Bishop);
-            this.S[59] = new Thursday.Piece(Colour.Black, PieceType.King);
-            this.S[60] = new Thursday.Piece(Colour.Black, PieceType.Queen);
-            this.S[61] = new Thursday.Piece(Colour.Black, PieceType.Bishop);
-            this.S[62] = new Thursday.Piece(Colour.Black, PieceType.Knight);
-            this.S[63] = new Thursday.Piece(Colour.Black, PieceType.Rook);
+            this.S[56] = new Piece(Colour.Black, PieceType.Rook);
+            this.S[57] = new Piece(Colour.Black, PieceType.Knight);
+            this.S[58] = new Piece(Colour.Black, PieceType.Bishop);
+            this.S[59] = new Piece(Colour.Black, PieceType.King);
+            this.S[60] = new Piece(Colour.Black, PieceType.Queen);
+            this.S[61] = new Piece(Colour.Black, PieceType.Bishop);
+            this.S[62] = new Piece(Colour.Black, PieceType.Knight);
+            this.S[63] = new Piece(Colour.Black, PieceType.Rook);
 
             for (int i = 8; i < 16; i++)
-                this.S[i] = new Thursday.Piece(Colour.White, PieceType.Pawn);
+                this.S[i] = new Piece(Colour.White, PieceType.Pawn);
             for (int i = 48; i < 56; i++)
-                this.S[i] = new Thursday.Piece(Colour.Black, PieceType.Pawn);
+                this.S[i] = new Piece(Colour.Black, PieceType.Pawn);
             for (int i = 16; i < 48; i++)
                 this.S[i] = null;
 
@@ -160,7 +209,7 @@ namespace Thursday
                 if (m_AllMovesCount == -1)
                 {
                     m_AllMovesCount = 0;
-                    m_AllPossibleMoves = new Move[218];
+                    m_AllPossibleMoves = new Move[150];
                     EnumerateAllMoves();
                 }
 
@@ -174,7 +223,7 @@ namespace Thursday
                 if (m_AllPossibleMoves == null)
                 {
                     m_AllMovesCount = 0;
-                    m_AllPossibleMoves = new Move[218];
+                    m_AllPossibleMoves = new Move[150];
                     EnumerateAllMoves();
                     //m_AllPossibleMoves = m_AllPossibleMoves.OrderByDescending(m => (new Board(this, m.From, m.To)).ScoreBoard()).ToList();
                 }
@@ -248,9 +297,9 @@ namespace Thursday
                 // Take SE
                 if (ExistsAtOffset(i, 1, 1) && S[i + 9] != null && S[i + 9].Colour == Colour.Black)
                     p.AddMove(i + 9);
-                if (EpSquare == i + 7)
+                if (EpSquare == i + 7 && i % 8 != 0)
                     p.AddMove(i + 7);
-                if (EpSquare == i + 9)
+                if (EpSquare == i + 9 && i % 8 != 7)
                     p.AddMove(i + 9);
             }
             else
@@ -267,9 +316,9 @@ namespace Thursday
                 // Take NW
                 if (ExistsAtOffset(i, -1, -1) && S[i - 9] != null && S[i - 9].Colour == Colour.White)
                     p.AddMove(i - 9);
-                if (EpSquare == i - 7)
+                if (EpSquare == i - 7 && i % 8 != 0)
                     p.AddMove(i - 7);
-                if (EpSquare == i - 9)
+                if (EpSquare == i - 9 && i % 8 != 7)
                     p.AddMove(i - 9);
             }
         }
@@ -485,13 +534,13 @@ namespace Thursday
 
         private bool ExistsAtOffset(int startSquare, int dirY, int dirX)
         {
-            return Mailbox.X1012[Mailbox.X88[startSquare] + (dirY * 10) + dirX] >= 0;
+            return X1012[X88[startSquare] + (dirY * 10) + dirX] >= 0;
         }
 
         // 0-based: white rook starts at rank 0, file 0
         private static int Rank(int i)
         {
-            return Mailbox.Rank[i];
+            return rank[i];
         }
 
         // 0-based: white rook starts at rank 0, file 0
@@ -508,6 +557,12 @@ namespace Thursday
         public double ScoreBoard()
         {
             double score = 0;
+            int pieceCount = 0;
+
+            score += (this.AllMovesCount / 200f * (WhosMove == Colour.White ? 1f : -1f));
+
+            for (int i = 0; i < 64; i++)
+                if (S[i] == null) pieceCount++;
 
             for (int i = 0; i < 64; i++)
             {
@@ -531,11 +586,18 @@ namespace Thursday
                     score -= pVal;
                 }
 
-                skip: ;
+                // Favour a secure king in early game
+                if (S[i].PieceType == PieceType.King)
+                    if (pieceCount < 20)
+                    {
+                        pVal += Math.Abs((double)File(i) - 3.5f) / 40f;
+                        score -= (S[i].MoveCount * 0.04f) * (WhosMove == Colour.White ? 1 : -1);
+                    }
+
+            skip: ;
             }
 
-            //score += CalculateKingSafety();
-            score += (this.AllMovesCount / 200f * (WhosMove == Colour.White ? 1f : -1f));
+            
 
             return score;
         }

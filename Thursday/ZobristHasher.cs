@@ -19,9 +19,9 @@ namespace Thursday
         private void InitHashes()
         {
             Random rand = new Random();
-            m_Hs = new long[64, 12];
+            m_Hs = new long[65, 12];
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 65; i++)
                 for (int j = 0; j < 12; j++)
                     m_Hs[i, j] = (rand.Next(int.MinValue, int.MaxValue) * int.MaxValue) + rand.Next(int.MinValue, int.MaxValue);
         }
@@ -41,6 +41,13 @@ namespace Thursday
                     h = h ^ m_Hs[i, j];
                 }
             }
+
+            if (b.WhosMove == Colour.White) h ^= m_Hs[64, 0];
+            if (b.WhosMove == Colour.Black) h ^= m_Hs[64, 1];
+            if (b.BlackCanKCastle) h ^= m_Hs[64, 2];
+            if (b.BlackCanQCastle) h ^= m_Hs[64, 3];
+            if (b.WhiteCanKCastle) h ^= m_Hs[64, 4];
+            if (b.WhiteCanQCastle) h ^= m_Hs[64, 5];
 
             return h;
         }
@@ -67,7 +74,8 @@ namespace Thursday
 
             if (m_Zs.ContainsKey(hash))
             {
-                if (m_Zs[hash].Item1 < tuple.Item1)
+                // If this position has been calculated to a greater depth, use it instead 
+                if (tuple.Item1 > m_Zs[hash].Item1)
                     m_Zs[hash] = tuple;
             }
             else

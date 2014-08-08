@@ -17,11 +17,11 @@ namespace Thursday
             MoveCount = 0;
             int maxMoves = 5;
 
-            if (pieceType == PieceType.Bishop) maxMoves = 28;
+            if (pieceType == PieceType.Bishop) maxMoves = 14;
             else if (pieceType == PieceType.Rook) maxMoves = 14;
             else if (pieceType == PieceType.Knight) maxMoves = 8;
             else if (pieceType == PieceType.King) maxMoves = 10;
-            else if (pieceType == PieceType.Queen) maxMoves = 42;
+            else if (pieceType == PieceType.Queen) maxMoves = 28;
 
             ValidMoves = new int[maxMoves];
 

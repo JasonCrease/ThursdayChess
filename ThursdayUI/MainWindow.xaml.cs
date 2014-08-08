@@ -162,9 +162,7 @@ namespace ThursdayUI
 
         private void buttonNext_Click(object sender, RoutedEventArgs e)
         {
-            Move bestMove = computer.ComputeBestMove();
-            computer.MakeMove(bestMove.From, bestMove.To);
-            UpdateUi(computer.Board);
+            computer.CalculateAndMakeMoveAsync(RenderBoardAsync);
         }
 
         private void buttonFlip_Click(object sender, RoutedEventArgs e)
