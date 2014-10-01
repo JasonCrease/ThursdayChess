@@ -559,7 +559,7 @@ namespace Thursday
             double score = 0;
             int pieceCount = 0;
 
-            score += (this.AllMovesCount / 200f * (WhosMove == Colour.White ? 1f : -1f));
+            score += ((double)this.AllMovesCount / 200d) * (WhosMove == Colour.White ? 1d : -1d);
 
             for (int i = 0; i < 64; i++)
                 if (S[i] == null) pieceCount++;
@@ -572,17 +572,17 @@ namespace Thursday
                 double pVal = 0;
 
                 pVal += PieceValue(S[i].PieceType);
-                pVal -= Math.Abs((double)File(i) - 3.5f) / 70f;  // favour central pieces
+                pVal -= Math.Abs((double)File(i) - 3.5d) / 70d;  // favour central pieces
 
                 // Favour advanced pieces
                 if (S[i].Colour == Colour.White)
                 {
-                    pVal += (double)(Rank(i)) / 20f;
+                    pVal += (double)(Rank(i)) / 20d;
                     score += pVal;
                 }
                 else
                 {
-                    pVal += (double)(7 - Rank(i)) / 20f;
+                    pVal += (double)(7d - Rank(i)) / 20d;
                     score -= pVal;
                 }
 
@@ -590,8 +590,8 @@ namespace Thursday
                 if (S[i].PieceType == PieceType.King)
                     if (pieceCount < 20)
                     {
-                        pVal += Math.Abs((double)File(i) - 3.5f) / 40f;
-                        score -= (S[i].MoveCount * 0.04f) * (WhosMove == Colour.White ? 1 : -1);
+                        pVal += Math.Abs((double)File(i) - 3.5d) / 40d;
+                        score -= (S[i].MoveCount * 0.04d) * (WhosMove == Colour.White ? 1 : -1);
                     }
 
             skip: ;
@@ -606,21 +606,21 @@ namespace Thursday
         private double PieceValue(PieceType pieceType)
         {
             if (pieceType == PieceType.Blank)
-                return 0;
-            if (pieceType == PieceType.Pawn)
-                return 1;
-            if (pieceType == PieceType.Knight)
-                return 3.1;
-            if (pieceType == PieceType.Bishop)
-                return 3.25;
-            if (pieceType == PieceType.Rook)
-                return 5;
-            if (pieceType == PieceType.Queen)
-                return 9;
-            if (pieceType == PieceType.King)
-                return 1000;
+                throw new ApplicationException();
 
-            throw new ApplicationException();
+            if (pieceType == PieceType.Pawn)
+                return 1d;
+            if (pieceType == PieceType.Knight)
+                return 3.1d;
+            if (pieceType == PieceType.Bishop)
+                return 3.25d;
+            if (pieceType == PieceType.Rook)
+                return 5d;
+            if (pieceType == PieceType.Queen)
+                return 9d;
+
+            // By process of elimination, it's the king
+            return 1000d;
         }
 
         public override string ToString()
