@@ -19,7 +19,7 @@ namespace Thursday
             score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
             if (m_RankedMoves.Count() == 0)
-                if(b.KingIsInCheck())
+                if(b.KingIsInCheck)
                     throw new ApplicationException("Checkmate!");
                 else
                     throw new ApplicationException("Stalemate!");
@@ -58,25 +58,29 @@ namespace Thursday
                 {
                     Move move = b.AllMoves[i];
                     Board boardAfterMove = b.MakeMove(move.From, move.To);
-                    double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 
-                    // Cache this score
-                    m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth - 1, colour * score));
-
-                    nodesVisited++;
-                    if (score >= beta)
-                        return score;
-                    if (score > alpha)
+                    if (!b.KingIsInCheck)
                     {
-                        alpha = score;
-                    }
+                        double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 
-                    if (depth == MaxNegamaxDepth)
-                    {
-                        if (!boardAfterMove.YouCanTakeOpponentsKing())
+                        // Cache this score
+                        m_Zasher.AddIfBetter(boardAfterMove, new Tuple<int, double>(depth - 1, colour * score));
+
+                        nodesVisited++;
+                        if (score >= beta)
+                            return score;
+                        if (score > alpha)
                         {
-                            m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
-                            m_Zasher.AddIfBetter(b, new Tuple<int, double>(depth, colour * score));
+                            alpha = score;
+                        }
+
+                        if (depth == MaxNegamaxDepth)
+                        {
+                            if (!boardAfterMove.YouCanTakeOpponentsKing())
+                            {
+                                m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
+                                m_Zasher.AddIfBetter(b, new Tuple<int, double>(depth, colour * score));
+                            }
                         }
                     }
                 }

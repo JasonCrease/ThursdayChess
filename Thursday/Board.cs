@@ -675,17 +675,117 @@ namespace Thursday
             return true;
         }
 
-        internal bool KingIsInCheck()
+        public bool KingIsInCheck
         {
-            for(int i=0; i<64; i++)
+            get
             {
-                if(S[i].PieceType == PieceType.King && S[i].Colour == WhosMove)
-                {
-                    return true;
-                }
-            }
+                int kingPos = -1;
 
-            return false;
+                for (int i = 0; i < 64; i++)
+                {
+                    if (S[i] != null && S[i].PieceType == PieceType.King && S[i].Colour == WhosMove)
+                    {
+                        kingPos = i;
+                        break;
+                    }
+                }
+
+                #region Diagonal search
+
+                // See if bishop or queen is to NW
+                for (int offset = 1; ExistsAtOffset(kingPos, -offset, -offset); offset++)
+                {
+                    int j = kingPos - (offset * 8) - offset;
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Bishop || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+                // See if bishop or queen is to NE
+                for (int offset = 1; ExistsAtOffset(kingPos, -offset, offset); offset++)
+                {
+                    int j = kingPos - (offset * 8) + offset;
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Bishop || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+                // See if bishop or queen is to SE
+                for (int offset = 1; ExistsAtOffset(kingPos, offset, -offset); offset++)
+                {
+                    int j = kingPos + (offset * 8) - offset;
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Bishop || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+                // See if bishop or queen is to SW
+                for (int offset = 1; ExistsAtOffset(kingPos, offset, offset); offset++)
+                {
+                    int j = kingPos + (offset * 8) + offset;
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Bishop || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+
+                #endregion
+
+                #region Horizontal and vertical search
+
+                // Search N
+                for (int j = kingPos - 8; j >= 0; j -= 8)
+                {
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Rook || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+                // Search S
+                for (int j = kingPos + 8; j < 64; j += 8)
+                {
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Rook || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+                // Search W
+                for (int j = kingPos - 1; j >= Rank(kingPos) * 8; j -= 1)
+                {
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Rook || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+                // Search E
+                for (int j = kingPos + 1; j < (Rank(kingPos) + 1) * 8; j += 1)
+                {
+                    if (!IsEmpty(j))
+                    {
+                        if (S[j].Colour != WhosMove && (S[j].PieceType == PieceType.Rook || S[j].PieceType == PieceType.Queen))
+                            return true;
+                        break;
+                    }
+                }
+
+                #endregion
+
+                return false;
+            }
         }
     }
 }
