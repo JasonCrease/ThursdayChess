@@ -36,8 +36,7 @@ namespace Thursday
 
         public void BuildInitialBoard()
         {
-            b = new Board();
-            b.SetupStandardBoard();
+            b = Board.InitialStandardBoard;
         }
 
         private Stack<Board> m_OldBoards = new Stack<Board>();
@@ -56,9 +55,19 @@ namespace Thursday
             if (!Board.MoveIsLegal(fromPos, toPos))
                 throw new ApplicationException("Move is illegal. Try another");
 
-            m_OldBoards.Push(Board);
-            Board = Board.MakeMove(fromPos, toPos);
-            WhosMove = Board.WhosMove;
+            Board newBoard = new Board(Board);
+            bool isLegal = newBoard.MakeMove(fromPos, toPos);
+
+            if (isLegal)
+            {
+                m_OldBoards.Push(Board);
+                Board = newBoard;
+                WhosMove = newBoard.WhosMove;
+            }
+            else
+            {
+                throw new ApplicationException("Move is illegal. Try another");
+            }
         }
 
         public abstract Move ComputeBestMove();

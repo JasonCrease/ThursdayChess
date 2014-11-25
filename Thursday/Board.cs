@@ -58,8 +58,6 @@ namespace Thursday
 
         public Piece[] S = new Piece[64];
 
-        internal bool BlackIsInCheck;
-        internal bool WhiteIsInCheck;
         internal bool BlackCanQCastle = true;
         internal bool BlackCanKCastle = true;
         internal bool WhiteCanQCastle = true;
@@ -69,34 +67,43 @@ namespace Thursday
 
         public Colour WhosMove;
 
-        public void SetupStandardBoard()
+        private Board()
         {
-            this.S[0] = new Piece(Colour.White, PieceType.Rook);
-            this.S[1] = new Piece(Colour.White, PieceType.Knight);
-            this.S[2] = new Piece(Colour.White, PieceType.Bishop);
-            this.S[3] = new Piece(Colour.White, PieceType.King);
-            this.S[4] = new Piece(Colour.White, PieceType.Queen);
-            this.S[5] = new Piece(Colour.White, PieceType.Bishop);
-            this.S[6] = new Piece(Colour.White, PieceType.Knight);
-            this.S[7] = new Piece(Colour.White, PieceType.Rook);
-
-            this.S[56] = new Piece(Colour.Black, PieceType.Rook);
-            this.S[57] = new Piece(Colour.Black, PieceType.Knight);
-            this.S[58] = new Piece(Colour.Black, PieceType.Bishop);
-            this.S[59] = new Piece(Colour.Black, PieceType.King);
-            this.S[60] = new Piece(Colour.Black, PieceType.Queen);
-            this.S[61] = new Piece(Colour.Black, PieceType.Bishop);
-            this.S[62] = new Piece(Colour.Black, PieceType.Knight);
-            this.S[63] = new Piece(Colour.Black, PieceType.Rook);
-
-            for (int i = 8; i < 16; i++)
-                this.S[i] = new Piece(Colour.White, PieceType.Pawn);
-            for (int i = 48; i < 56; i++)
-                this.S[i] = new Piece(Colour.Black, PieceType.Pawn);
-            for (int i = 16; i < 48; i++)
-                this.S[i] = null;
 
             this.WhosMove = Colour.White;
+        }
+
+        public static Board InitialStandardBoard
+        {
+            get{
+                Board b = new Board();
+                b.S[0] = new Piece(Colour.White, PieceType.Rook);
+                b.S[1] = new Piece(Colour.White, PieceType.Knight);
+                b.S[2] = new Piece(Colour.White, PieceType.Bishop);
+                b.S[3] = new Piece(Colour.White, PieceType.King);
+                b.S[4] = new Piece(Colour.White, PieceType.Queen);
+                b.S[5] = new Piece(Colour.White, PieceType.Bishop);
+                b.S[6] = new Piece(Colour.White, PieceType.Knight);
+                b.S[7] = new Piece(Colour.White, PieceType.Rook);
+
+                b.S[56] = new Piece(Colour.Black, PieceType.Rook);
+                b.S[57] = new Piece(Colour.Black, PieceType.Knight);
+                b.S[58] = new Piece(Colour.Black, PieceType.Bishop);
+                b.S[59] = new Piece(Colour.Black, PieceType.King);
+                b.S[60] = new Piece(Colour.Black, PieceType.Queen);
+                b.S[61] = new Piece(Colour.Black, PieceType.Bishop);
+                b.S[62] = new Piece(Colour.Black, PieceType.Knight);
+                b.S[63] = new Piece(Colour.Black, PieceType.Rook);
+
+                for (int i = 8; i < 16; i++)
+                    b.S[i] = new Piece(Colour.White, PieceType.Pawn);
+                for (int i = 48; i < 56; i++)
+                    b.S[i] = new Piece(Colour.Black, PieceType.Pawn);
+                for (int i = 16; i < 48; i++)
+                    b.S[i] = null;
+
+                return b;
+            }
         }
 
         public bool YouCanTakeOpponentsKing()
@@ -111,24 +118,28 @@ namespace Thursday
             return false;
         }
 
-        public Board(Board oldBoard, int oldPos, int destPos)
+        public Board(Board currentBoard)
         {
-            this.WhosMove = oldBoard.WhosMove == Colour.Black ? Colour.White : Colour.Black;
-            this.BlackCanQCastle = oldBoard.BlackCanQCastle;
-            this.BlackCanKCastle = oldBoard.BlackCanKCastle;
-            this.WhiteCanQCastle = oldBoard.WhiteCanQCastle;
-            this.WhiteCanKCastle = oldBoard.WhiteCanKCastle;
-
+            this.BlackCanQCastle = currentBoard.BlackCanQCastle;
+            this.BlackCanKCastle = currentBoard.BlackCanKCastle;
+            this.WhiteCanQCastle = currentBoard.WhiteCanQCastle;
+            this.WhiteCanKCastle = currentBoard.WhiteCanKCastle;
+            
             for (int i = 0; i < 64; i++)
             {
-                if (oldBoard.S[i] != null)
-                    S[i] = new Piece(oldBoard.S[i]);
+                if (currentBoard.S[i] != null)
+                    S[i] = new Piece(currentBoard.S[i]);
             }
+            m_OldBoard = currentBoard;
+        }
 
+        // Return false if move is illegal
+        public bool MakeMove(int oldPos, int destPos)
+        {
             PieceType pieceType = S[oldPos].PieceType;
             
             // Handle queening and castle prevention
-            if (WhosMove == Colour.White)
+            if (WhosMove == Colour.Black)
             {
                 if (pieceType == PieceType.Pawn)
                 {
@@ -143,12 +154,12 @@ namespace Thursday
                     BlackCanKCastle = false;
                     if (destPos == oldPos + 2)   //Q-side castle move rook
                     {
-                        S[63] = null; //new Piece(Colour.Black, PieceType.Blank);
+                        S[63] = null;
                         S[60] = new Piece(Colour.Black, PieceType.Rook);
                     }
                     if (destPos == oldPos - 2)   //K-side castle move rook
                     {
-                        S[56] = null; //new Piece(Colour.Black, PieceType.Blank);
+                        S[56] = null;
                         S[58] = new Piece(Colour.Black, PieceType.Rook);
                     }
                 }
@@ -157,7 +168,7 @@ namespace Thursday
                 else if (pieceType == PieceType.Rook && oldPos == 63)
                     BlackCanQCastle = false;
             }
-            if (WhosMove == Colour.Black)
+            if (WhosMove == Colour.White)
             {
                 if (pieceType == PieceType.Pawn)
                 {
@@ -172,12 +183,12 @@ namespace Thursday
                     WhiteCanKCastle = false;
                     if (destPos == oldPos + 2)   //Q-side castle move rook
                     {
-                        S[7] = null; //new Piece(Colour.White, PieceType.Blank);
+                        S[7] = null; 
                         S[4] = new Piece(Colour.White, PieceType.Rook);
                     }
                     if (destPos == oldPos - 2)   //K-side castle move rook
                     {
-                        S[0] = null; //new Piece(Colour.White, PieceType.Blank);
+                        S[0] = null; 
                         S[2] = new Piece(Colour.White, PieceType.Rook);
                     }
                 }
@@ -187,19 +198,21 @@ namespace Thursday
                     WhiteCanQCastle = false;
             }
 
-            if (destPos == oldBoard.EpSquare && pieceType == PieceType.Pawn)
+            if (destPos == m_OldBoard.EpSquare && pieceType == PieceType.Pawn)
             {
-                if (WhosMove == Colour.Black)
-                    S[oldBoard.EpSquare - 8] = null; // new Piece(Colour.Blank, PieceType.Blank);
                 if (WhosMove == Colour.White)
-                    S[oldBoard.EpSquare + 8] = null; //Piece(Colour.Blank, PieceType.Blank);
+                    S[m_OldBoard.EpSquare - 8] = null;
+                if (WhosMove == Colour.Black)
+                    S[m_OldBoard.EpSquare + 8] = null;
             }
             S[destPos] = new Piece(S[oldPos]);
-            S[oldPos] = null; //new Piece(Colour.Blank, PieceType.Blank);
-        }
+            S[oldPos] = null;
 
-        public Board()
-        {
+            if (KingIsInCheck) return false;
+
+            this.WhosMove = m_OldBoard.WhosMove == Colour.White ? Colour.Black : Colour.White;
+
+            return true;
         }
 
         private Move[] m_AllPossibleMoves = null;
@@ -305,10 +318,10 @@ namespace Thursday
             else
             {
                 // Two-move start
-                if (Rank(i) == 6 && S[i - 8] == null && S[i - 16] == null)
+                if (Rank(i) == 6 && IsEmpty(i - 8) == null && IsEmpty(i - 16))
                     p.AddMove(i - 16, Power.PawnMove);
                 // One-moves
-                if (S[i - 8] == null)
+                if (IsEmpty(i - 8))
                     p.AddMove(i - 8, Power.PawnMove);
                 // Take NE
                 if (ExistsAtOffset(i, -1, 1) && S[i - 7] != null && S[i - 7].Colour == Colour.White)
@@ -325,6 +338,7 @@ namespace Thursday
 
         static int[] knightXoffs = new int[] { -2, -1, 1, 2, 2, 1, -1, -2 };
         static int[] knightYoffs = new int[] { 1, 2, 2, 1, -1, -2, -2, -1 };
+        private  Board m_OldBoard;
 
         private void EnumerateKnightMoves(int i)
         {
@@ -548,11 +562,6 @@ namespace Thursday
             return i % 8;
         }
 
-        public Board MakeMove(int oldPos, int destPos)
-        {
-            return new Board(this, oldPos, destPos);
-        }
-
         public double ScoreBoard()
         {
             double score = 0;
@@ -670,7 +679,6 @@ namespace Thursday
             if (fromPos == toPos) return false;
             if (!S[fromPos].Moves.Contains(toPos)) return false;
             if (S[fromPos].Colour != WhosMove) return false;
-            if (new Board(this, fromPos, toPos).YouCanTakeOpponentsKing()) return false;
 
             return true;
         }
@@ -785,6 +793,21 @@ namespace Thursday
                 #endregion
 
                 return false;
+            }
+        }
+
+        internal Board GetBoardAfterMove(int p1, int p2)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Board Blank
+        {
+            get
+            {
+                Board b = new Board();
+                b.WhosMove = Colour.White;
+                return b;
             }
         }
     }

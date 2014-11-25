@@ -31,7 +31,7 @@ namespace Thursday
                     for (int i = 0; i < b.AllMovesCount; i++)
                     {
                         Move move = b.AllMoves[i];
-                        double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
+                        double result = AlphaBeta(b.GetBoardAfterMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
                         nodesVisited++;
 
                         if (result > alpha)
@@ -53,7 +53,7 @@ namespace Thursday
                     for (int i = 0; i < b.AllMovesCount; i++)
                     {
                         Move move = b.AllMoves[i];
-                        double result = AlphaBeta(b.MakeMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
+                        double result = AlphaBeta(b.GetBoardAfterMove(move.From, move.To), depth - 1, alpha, beta, -colour, ref bestMoveYet);
                         nodesVisited++;
 
                         if (result < beta)

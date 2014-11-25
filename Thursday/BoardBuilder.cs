@@ -10,7 +10,7 @@ namespace Thursday
         public static Board BuildBoard(string boardStr, bool isWhitesMove = true,
             bool whiteCanQCastle = true, bool whiteCanKCastle = true, bool blackCanQCastle = true, bool blackCanKCastle = true)
         {
-            Board b = new Board();
+            Board b = Board.Blank;
             b.WhosMove = isWhitesMove ? Colour.White : Colour.Black;
             b.WhiteCanQCastle = whiteCanQCastle;
             b.WhiteCanKCastle = whiteCanKCastle;

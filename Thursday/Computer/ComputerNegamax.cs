@@ -19,7 +19,7 @@ namespace Thursday
             score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
             if (m_RankedMoves.Count() == 0)
-                if(b.KingIsInCheck)
+                if (b.KingIsInCheck)
                     throw new ApplicationException("Checkmate!");
                 else
                     throw new ApplicationException("Stalemate!");
@@ -40,7 +40,7 @@ namespace Thursday
             // If the same or better calculation of this state has already been made, use it.
             if (tuple != null && tuple.Item1 >= depth && depth < MaxNegamaxDepth)
             {
-                if (depth >  0) hashUsed++;
+                if (depth > 0) hashUsed++;
                 if (depth >= 0) hashUsed++;
                 return colour * tuple.Item2;
             }
@@ -57,9 +57,10 @@ namespace Thursday
                 for (int i = 0; i < b.AllMovesCount; i++)
                 {
                     Move move = b.AllMoves[i];
-                    Board boardAfterMove = b.MakeMove(move.From, move.To);
+                    Board boardAfterMove = new Board(b);
+                    bool moveOk = boardAfterMove.MakeMove(move.From, move.To);
 
-                    if (!b.KingIsInCheck)
+                    if (moveOk)
                     {
                         double score = -Negamax(boardAfterMove, depth - 1, -beta, -alpha, -colour);
 
@@ -76,11 +77,8 @@ namespace Thursday
 
                         if (depth == MaxNegamaxDepth)
                         {
-                            if (!boardAfterMove.YouCanTakeOpponentsKing())
-                            {
-                                m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
-                                m_Zasher.AddIfBetter(b, new Tuple<int, double>(depth, colour * score));
-                            }
+                            m_RankedMoves.Add(new Tuple<Move, double>(move, colour * score));
+                            m_Zasher.AddIfBetter(b, new Tuple<int, double>(depth, colour * score));
                         }
                     }
                 }

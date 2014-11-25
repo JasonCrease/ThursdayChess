@@ -11,6 +11,7 @@ namespace ThursdayTests
         static void Main(string[] args)
         {
             CheckTests.RunAll();
+            BestMoveTests.RunAll();
         }
     }
 }

@@ -35,6 +35,8 @@ namespace ThursdayTests
             Assert.IsTrue(b3.KingIsInCheck);
             Board b4 = BoardBuilder.BuildBoard(".b...... K......." + new String('.', 48));
             Assert.IsTrue(b4.KingIsInCheck);
+            Board b5 = BoardBuilder.BuildBoard("b" + new String('.', 62) + "K");
+            Assert.IsTrue(b5.KingIsInCheck);
 
             Board b0 = BoardBuilder.BuildBoard("b....... ..K....." + new String('.', 48));
             Assert.IsFalse(b0.KingIsInCheck);
