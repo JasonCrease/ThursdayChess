@@ -125,7 +125,7 @@ namespace ThursdayUI
         {
             RenderBoard(board);
             labelScoreBoard.Content = String.Format("{0:0.00}", computer.Board.ScoreBoard());
-            if(!computer.IsThinking)
+            //if(!computer.IsThinking)
                 labelComputationTime.Content = String.Format("{0:0.00}s", (float)computer.MsTaken / 1000f);
             labelWhosTurn.Content = String.Format("Your turn");
         }
@@ -134,6 +134,36 @@ namespace ThursdayUI
         {
             computer.BuildInitialBoard();
             RenderBoard(computer.Board);
+        }
+
+        bool m_PlayingDemo = false;
+        Thread m_DemoThread;
+
+        private void buttonPlayDemo_Click(object sender, RoutedEventArgs e)
+        {
+            if(!m_PlayingDemo)
+            {
+                buttonPlayDemo.Content = "Stop autoplay";
+                m_PlayingDemo = true;
+                m_DemoThread = new Thread(PlayDemo);
+                m_DemoThread.Start();
+            }
+            else
+            {
+                buttonPlayDemo.Content = "Start autoplay";
+                m_PlayingDemo = false;
+                m_DemoThread = null;
+            }
+        }
+
+        public void PlayDemo()
+        {
+            while (m_PlayingDemo)
+            {
+                computer.ComputeAndMakeBestMove(null);
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(UpdateUi), computer.Board);
+                Thread.Sleep(50);
+            }
         }
 
         private void RenderBoard(Board board)

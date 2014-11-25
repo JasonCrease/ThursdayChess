@@ -9,34 +9,37 @@ namespace Thursday
     {
         public PieceType PieceType;
         public Colour Colour;
-        public int[] ValidMoves;
-        public int MoveCount;
+        public int[] Moves;
+        public double[] Powers;
+        public int MoveCnt;
 
         public Piece(Colour colour, PieceType pieceType)
         {
-            MoveCount = 0;
-            int maxMoves = 5;
+            MoveCnt = 0;
+            int maxMoves = 0;
 
-            if (pieceType == PieceType.Bishop) maxMoves = 14;
+            if (pieceType == PieceType.Pawn) maxMoves = 5;
+            else if (pieceType == PieceType.Bishop) maxMoves = 13;
             else if (pieceType == PieceType.Rook) maxMoves = 14;
             else if (pieceType == PieceType.Knight) maxMoves = 8;
             else if (pieceType == PieceType.King) maxMoves = 10;
-            else if (pieceType == PieceType.Queen) maxMoves = 28;
+            else if (pieceType == PieceType.Queen) maxMoves = 27;
 
-            ValidMoves = new int[maxMoves];
+            Moves = new int[maxMoves];
+            Powers = new double[maxMoves];
 
             Colour = colour;
             PieceType = pieceType;
         }
 
         public Piece(Piece piece) : this(piece.Colour, piece.PieceType)
-        { 
+        {
         }
 
-        public void AddMove(int i)
+        public void AddMove(int i, double power)
         {
-            ValidMoves[MoveCount] = i;
-            MoveCount++;
+            Moves[MoveCnt] = i;
+            MoveCnt++;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Thursday
         {
             int r = rand.Next(0, b.AllMovesCount);
 
-            return new Move(b.AllMoves[r].From, b.AllMoves[r].To);
+            return new Move(b.AllMoves[r].From, b.AllMoves[r].To, -100);
         }
     }
 }

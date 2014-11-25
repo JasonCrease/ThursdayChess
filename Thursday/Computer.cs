@@ -70,6 +70,7 @@ namespace Thursday
         }
 
         Stopwatch m_StopWatch = new Stopwatch();
+        long m_MsTaken = 0L;
 
         public void ComputeAndMakeBestMove(object MoveCalculatedAction)
         {
@@ -83,11 +84,12 @@ namespace Thursday
 
             IsThinking = false;
             m_StopWatch.Stop();
+            m_MsTaken = m_StopWatch.ElapsedMilliseconds;
 
-            action();
+            if (action != null) action();
         }
 
         public int Difficulty { get; set; }
-        public long MsTaken { get { return m_StopWatch.ElapsedMilliseconds; } }
+        public long MsTaken { get { return m_MsTaken; } }
     }
 }

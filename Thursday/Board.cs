@@ -264,9 +264,9 @@ namespace Thursday
                             throw new ApplicationException();
                     }
 
-                    for (int j = 0; j < S[i].MoveCount; j++)
+                    for (int j = 0; j < S[i].MoveCnt; j++)
                     {
-                        m_AllPossibleMoves[m_AllMovesCount] = new Move(i, S[i].ValidMoves[j]);
+                        m_AllPossibleMoves[m_AllMovesCount] = new Move(i, S[i].Moves[j], S[i].Powers[j]);
                         m_AllMovesCount++;
                     }
                 }
@@ -287,39 +287,39 @@ namespace Thursday
             {
                 // Two-move start
                 if (Rank(i) == 1 && IsEmpty(i + 8) && IsEmpty(i + 16))
-                    p.AddMove(i + 16);
+                    p.AddMove(i + 16, Power.PawnMove);
                 // One-moves
                 if (IsEmpty(i + 8))
-                    p.AddMove(i + 8);
+                    p.AddMove(i + 8, Power.PawnMove);
                 // Take SW
                 if (ExistsAtOffset(i, 1, -1) && S[i + 7] != null && S[i + 7].Colour == Colour.Black)
-                    p.AddMove(i + 7);
+                    p.AddMove(i + 7, Power.PawnCapture);
                 // Take SE
                 if (ExistsAtOffset(i, 1, 1) && S[i + 9] != null && S[i + 9].Colour == Colour.Black)
-                    p.AddMove(i + 9);
+                    p.AddMove(i + 9, Power.PawnCapture);
                 if (EpSquare == i + 7 && i % 8 != 0)
-                    p.AddMove(i + 7);
+                    p.AddMove(i + 7, Power.PawnCapture);
                 if (EpSquare == i + 9 && i % 8 != 7)
-                    p.AddMove(i + 9);
+                    p.AddMove(i + 9, Power.PawnCapture);
             }
             else
             {
                 // Two-move start
                 if (Rank(i) == 6 && S[i - 8] == null && S[i - 16] == null)
-                    p.AddMove(i - 16);
+                    p.AddMove(i - 16, Power.PawnMove);
                 // One-moves
                 if (S[i - 8] == null)
-                    p.AddMove(i - 8);
+                    p.AddMove(i - 8, Power.PawnMove);
                 // Take NE
                 if (ExistsAtOffset(i, -1, 1) && S[i - 7] != null && S[i - 7].Colour == Colour.White)
-                    p.AddMove(i - 7);
+                    p.AddMove(i - 7, Power.PawnCapture);
                 // Take NW
                 if (ExistsAtOffset(i, -1, -1) && S[i - 9] != null && S[i - 9].Colour == Colour.White)
-                    p.AddMove(i - 9);
+                    p.AddMove(i - 9, Power.PawnCapture);
                 if (EpSquare == i - 7 && i % 8 != 0)
-                    p.AddMove(i - 7);
+                    p.AddMove(i - 7, Power.PawnCapture);
                 if (EpSquare == i - 9 && i % 8 != 7)
-                    p.AddMove(i - 9);
+                    p.AddMove(i - 9, Power.PawnCapture);
             }
         }
 
@@ -329,7 +329,6 @@ namespace Thursday
         private void EnumerateKnightMoves(int i)
         {
             Piece p = S[i];
-            int[] validMoves = S[i].ValidMoves;
 
             for (int c = 0; c < 8; c++)
             {
@@ -339,11 +338,11 @@ namespace Thursday
                 int j = i + (xOff * 8) + yOff;
                 if (ExistsAtOffset(i, xOff, yOff))
                     if (IsEmptyAtOffset(i, xOff, yOff))
-                        p.AddMove(j);
+                        p.AddMove(j, Power.KnightMove);   // knight move
                     else
                     {
                         if (S[i].Colour != S[j].Colour)
-                            p.AddMove(j);
+                            p.AddMove(j, Power.KnightCapture);   // knight capture
                     }
             }
         }
@@ -358,11 +357,11 @@ namespace Thursday
             {
                 int j = i - (offset * 8) - offset;
                 if (IsEmpty(j))
-                    p.AddMove(j);
+                    p.AddMove(j, Power.BishopMove);   // bishop move
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(j);
+                        p.AddMove(j, Power.BishopCapture);   // bishop capture
                     break;
                 }
             }
@@ -372,11 +371,11 @@ namespace Thursday
             {
                 int j = i - (offset * 8) + offset;
                 if (IsEmpty(j))
-                    p.AddMove(j);
+                    p.AddMove(j, Power.BishopMove);   // bishop move
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(j);
+                        p.AddMove(j, Power.BishopCapture);   // bishop capture
                     break;
                 }
             }
@@ -386,11 +385,11 @@ namespace Thursday
             {
                 int j = i + (offset * 8) - offset;
                 if (IsEmpty(j))
-                    p.AddMove(j);
+                    p.AddMove(j, Power.BishopMove);
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(j);
+                        p.AddMove(j, Power.BishopCapture);
                     break;
                 }
             }
@@ -401,11 +400,11 @@ namespace Thursday
             {
                 int j = i + (offset * 8) + offset;
                 if (IsEmpty(j))
-                    p.AddMove(j);
+                    p.AddMove(j, Power.BishopMove);
                 else
                 {
                     if (S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(j);
+                        p.AddMove(j, Power.BishopCapture);
                     break;
                 }
             }
@@ -421,11 +420,11 @@ namespace Thursday
             for (j = i - 8; j >= 0; j -= 8)
             {
                 if (S[j] == null)
-                    p.AddMove(j);
+                    p.AddMove(j, Power.RookMove);
                 else
                 {
                     if (j != i && S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(j);
+                        p.AddMove(j, Power.RookCapture);
                     break;
                 }
             }
@@ -434,11 +433,11 @@ namespace Thursday
             for (j = i + 8; j < 64; j += 8)
             {
                 if (S[j] == null)
-                    p.AddMove(j);
+                    p.AddMove(j, Power.RookMove);
                 else
                 {
                     if (j != i && S[j].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(j);
+                        p.AddMove(j, Power.RookCapture);
                     break;
                 }
             }
@@ -447,11 +446,11 @@ namespace Thursday
             for (int offset = 1; ExistsAtOffset(i, 0, offset); offset++)
             {
                 if (IsEmpty(i + offset))
-                    p.AddMove(i + offset);
+                    p.AddMove(i + offset, Power.RookMove);
                 else
                 {
                     if (S[i + offset].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(i + offset);
+                        p.AddMove(i + offset, Power.RookCapture);
                     break;
                 }
             }
@@ -460,11 +459,11 @@ namespace Thursday
             for (int offset = -1; ExistsAtOffset(i, 0, offset); offset--)
             {
                 if (IsEmpty(i + offset))
-                    p.AddMove(i + offset);
+                    p.AddMove(i + offset, Power.RookMove);
                 else
                 {
                     if (S[i + offset].Colour != col)  // If piece slide end is another colour, consider taking it
-                        p.AddMove(i + offset);
+                        p.AddMove(i + offset, Power.RookCapture);
                     break;
                 }
             }
@@ -475,40 +474,40 @@ namespace Thursday
             Piece p = S[i];
 
             if (ExistsAtOffset(i, -1, -1) && IsEmptyOrEnemy(i - 9))
-                p.AddMove((short)(i - 9));
+                p.AddMove((short)(i - 9), Power.KingMove);
             if (ExistsAtOffset(i, -1, 0) && IsEmptyOrEnemy(i - 8))
-                p.AddMove((short)(i - 8));
+                p.AddMove((short)(i - 8), Power.KingMove);
             if (ExistsAtOffset(i, -1, 1) && IsEmptyOrEnemy(i - 7))
-                p.AddMove((short)(i - 7));
+                p.AddMove((short)(i - 7), Power.KingMove);
 
             if (ExistsAtOffset(i, 0, -1) && IsEmptyOrEnemy(i - 1))
-                p.AddMove((short)(i - 1));
+                p.AddMove((short)(i - 1), Power.KingMove);
             if (ExistsAtOffset(i, 0, 1) && IsEmptyOrEnemy(i + 1))
-                p.AddMove((short)(i + 1));
+                p.AddMove((short)(i + 1), Power.KingMove);
 
             if (ExistsAtOffset(i, 1, -1) && IsEmptyOrEnemy(i + 7))
-                p.AddMove((short)(i + 7));
+                p.AddMove((short)(i + 7), Power.KingMove);
             if (ExistsAtOffset(i, 1, 0) && IsEmptyOrEnemy(i + 8))
-                p.AddMove((short)(i + 8));
+                p.AddMove((short)(i + 8), Power.KingMove);
             if (ExistsAtOffset(i, 1, 1) && IsEmptyOrEnemy(i + 9))
-                p.AddMove((short)(i + 9));
+                p.AddMove((short)(i + 9), Power.KingMove);
 
             if (WhosMove == Colour.White && WhiteCanKCastle)
                 if (IsEmpty(1) && IsEmpty(2) && S[0] !=null &&
                     S[0].PieceType == PieceType.Rook && S[0].Colour == Colour.White)
-                    p.AddMove(1);
+                    p.AddMove(1, Power.KingMove);
             if (WhosMove == Colour.White && WhiteCanQCastle)
                 if (IsEmpty(4) && IsEmpty(5) && IsEmpty(6) && S[7] != null &&
                     S[7].PieceType == PieceType.Rook && S[7].Colour == Colour.White)
-                    p.AddMove(5);
+                    p.AddMove(5, Power.KingMove);
             if (WhosMove == Colour.Black && BlackCanKCastle)
                 if (IsEmpty(57) && IsEmpty(58) && S[56] !=null &&
                     S[56].PieceType == PieceType.Rook && S[56].Colour == Colour.Black)
-                    p.AddMove(57);
+                    p.AddMove(57, Power.KingMove);
             if (WhosMove == Colour.Black && BlackCanQCastle)
                 if (IsEmpty(60) && IsEmpty(61) && IsEmpty(62) && S[63] != null && 
                     S[63].PieceType == PieceType.Rook && S[63].Colour == Colour.Black)
-                    p.AddMove(61);
+                    p.AddMove(61, Power.KingMove);
         }
 
         private bool IsEmpty(int i)
@@ -562,13 +561,11 @@ namespace Thursday
             score += ((double)this.AllMovesCount / 200d) * (WhosMove == Colour.White ? 1d : -1d);
 
             for (int i = 0; i < 64; i++)
-                if (S[i] == null) pieceCount++;
-
-            for (int i = 0; i < 64; i++)
             {
                 if (S[i] == null)
                     goto skip;
 
+                pieceCount++;
                 double pVal = 0;
 
                 pVal += PieceValue(S[i].PieceType);
@@ -586,18 +583,19 @@ namespace Thursday
                     score -= pVal;
                 }
 
-                // Favour a secure king in early game
-                if (S[i].PieceType == PieceType.King)
-                    if (pieceCount < 20)
-                    {
-                        pVal += Math.Abs((double)File(i) - 3.5d) / 40d;
-                        score -= (S[i].MoveCount * 0.04d) * (WhosMove == Colour.White ? 1 : -1);
-                    }
+
 
             skip: ;
             }
 
-            
+            // Favour a secure king in early game
+            if (pieceCount > 15)
+                for (int i = 0; i < 64; i++)
+                    if (S[i] != null && S[i].PieceType == PieceType.King)
+                    {
+                        score += (Math.Abs((double)File(i) - 3.5d) / 40d) * (WhosMove == S[i].Colour ? 1 : -1);
+                        //score -= (S[i].AttackCnt * 0.04d) * (WhosMove == Colour.White ? 1 : -1);
+                    }
 
             return score;
         }
@@ -670,11 +668,24 @@ namespace Thursday
         {
             var dummy = AllMoves;
             if (fromPos == toPos) return false;
-            if (!S[fromPos].ValidMoves.Contains(toPos)) return false;
+            if (!S[fromPos].Moves.Contains(toPos)) return false;
             if (S[fromPos].Colour != WhosMove) return false;
             if (new Board(this, fromPos, toPos).YouCanTakeOpponentsKing()) return false;
 
             return true;
+        }
+
+        internal bool KingIsInCheck()
+        {
+            for(int i=0; i<64; i++)
+            {
+                if(S[i].PieceType == PieceType.King && S[i].Colour == WhosMove)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

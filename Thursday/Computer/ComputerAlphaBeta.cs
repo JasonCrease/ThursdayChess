@@ -14,7 +14,7 @@ namespace Thursday
         {
             nodesVisited = 0;
             betaSkips = 0;
-            Move bestMoveYet = new Move(-1, -1);
+            Move bestMoveYet = new Move(-1, -1, -100);
             double score = AlphaBeta(b, MaxAlphaBetaDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1, ref bestMoveYet);
 
             return bestMoveYet;

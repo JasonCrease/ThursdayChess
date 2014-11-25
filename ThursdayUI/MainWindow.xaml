@@ -19,6 +19,7 @@
             <Button Content="Restart" Height="49" HorizontalAlignment="Left" Name="buttonGo" VerticalAlignment="Top" Width="218" Click="buttonGo_Click" FontSize="20" />
             <Button Content="Flip board" Height="49" HorizontalAlignment="Left" Name="buttonFlip" VerticalAlignment="Top" Width="218" Click="buttonFlip_Click" FontSize="20" />
             <Button Content="Computer make move" Height="51" HorizontalAlignment="Left" Name="buttonNext" VerticalAlignment="Top" Width="218" Click="buttonNext_Click" FontSize="20" />
+            <Button Content="Start auto play" Height="51" HorizontalAlignment="Left" Name="buttonPlayDemo" VerticalAlignment="Top" Width="218" Click="buttonPlayDemo_Click" FontSize="20"  />
             <Label Content="Your turn" Height="28" HorizontalAlignment="Left" Name="labelWhosTurn" VerticalAlignment="Top" Width="79" />
             <StackPanel Orientation="Horizontal">
                 <Label Content="Score" Height="28" HorizontalAlignment="Left" Name="labelScoreLabeller" VerticalAlignment="Top" Width="100" />

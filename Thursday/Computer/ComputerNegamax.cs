@@ -19,7 +19,7 @@ namespace Thursday
             score = Negamax(b, MaxNegamaxDepth, double.MinValue, double.MaxValue, WhosMove == Colour.White ? 1 : -1);
 
             if (m_RankedMoves.Count() == 0)
-                if(b.YouCanTakeOpponentsKing())
+                if(b.KingIsInCheck())
                     throw new ApplicationException("Checkmate!");
                 else
                     throw new ApplicationException("Stalemate!");

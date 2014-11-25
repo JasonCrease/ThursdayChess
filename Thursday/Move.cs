@@ -18,11 +18,13 @@ namespace Thursday
     {
         public int From;
         public int To;
+        public double Power;
 
-        public Move(int from, int to)
+        public Move(int from, int to, double power)
         {
             From = from;
             To = to;
+            Power = power;
         }
     }
 }

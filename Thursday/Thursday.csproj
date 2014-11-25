@@ -49,6 +49,7 @@
     <Compile Include="Move.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="PieceType.cs" />
+    <Compile Include="Power.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZobristHasher.cs" />
   </ItemGroup>
