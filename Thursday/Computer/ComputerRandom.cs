@@ -11,9 +11,16 @@ namespace Thursday
 
         public override Move ComputeBestMove()
         {
-            int r = rand.Next(0, b.AllMovesCount);
+            for (int i = 0; i < 100; i++)
+            {
+                int r = rand.Next(0, b.AllMovesCount);
 
-            return new Move(b.AllMoves[r].From, b.AllMoves[r].To, -100);
+                Move randMove = new Move(b.AllMoves[r].From, b.AllMoves[r].To, -100);
+                Board boardAfterMove = new Board(b);
+                if (boardAfterMove.MakeMove(randMove.From, randMove.To)) return randMove;
+            }
+
+            throw new ApplicationException("Can't find possible move");
         }
     }
 }
