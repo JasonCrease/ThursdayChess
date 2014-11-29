@@ -69,7 +69,6 @@ namespace Thursday
 
         private Board()
         {
-
             this.WhosMove = Colour.White;
         }
 
@@ -124,7 +123,8 @@ namespace Thursday
             this.BlackCanKCastle = currentBoard.BlackCanKCastle;
             this.WhiteCanQCastle = currentBoard.WhiteCanQCastle;
             this.WhiteCanKCastle = currentBoard.WhiteCanKCastle;
-            
+            this.WhosMove = currentBoard.WhosMove;
+
             for (int i = 0; i < 64; i++)
             {
                 if (currentBoard.S[i] != null)
@@ -507,7 +507,7 @@ namespace Thursday
                 p.AddMove((short)(i + 9), Power.KingMove);
 
             if (WhosMove == Colour.White && WhiteCanKCastle)
-                if (IsEmpty(1) && IsEmpty(2) && S[0] !=null &&
+                if (IsEmpty(1) && IsEmpty(2) && S[0] != null &&
                     S[0].PieceType == PieceType.Rook && S[0].Colour == Colour.White)
                     p.AddMove(1, Power.KingMove);
             if (WhosMove == Colour.White && WhiteCanQCastle)
@@ -515,11 +515,11 @@ namespace Thursday
                     S[7].PieceType == PieceType.Rook && S[7].Colour == Colour.White)
                     p.AddMove(5, Power.KingMove);
             if (WhosMove == Colour.Black && BlackCanKCastle)
-                if (IsEmpty(57) && IsEmpty(58) && S[56] !=null &&
+                if (IsEmpty(57) && IsEmpty(58) && S[56] != null &&
                     S[56].PieceType == PieceType.Rook && S[56].Colour == Colour.Black)
                     p.AddMove(57, Power.KingMove);
             if (WhosMove == Colour.Black && BlackCanQCastle)
-                if (IsEmpty(60) && IsEmpty(61) && IsEmpty(62) && S[63] != null && 
+                if (IsEmpty(60) && IsEmpty(61) && IsEmpty(62) && S[63] != null &&
                     S[63].PieceType == PieceType.Rook && S[63].Colour == Colour.Black)
                     p.AddMove(61, Power.KingMove);
         }
@@ -698,6 +698,9 @@ namespace Thursday
                     }
                 }
 
+                if (kingPos == -1)
+                    throw new ApplicationException("Cannot find king");
+
                 #region Diagonal search
 
                 // See if bishop or queen is to NW
@@ -788,6 +791,20 @@ namespace Thursday
                             return true;
                         break;
                     }
+                }
+
+                #endregion
+
+                #region Knight search
+
+                for (int c = 0; c < 8; c++)
+                {
+                    int xOff = knightXoffs[c];
+                    int yOff = knightYoffs[c];
+
+                    int j = kingPos + (xOff * 8) + yOff;
+                    if (ExistsAtOffset(kingPos, xOff, yOff))
+                        if (S[j] != null && S[j].PieceType == PieceType.Knight && S[j].Colour != WhosMove) return true;
                 }
 
                 #endregion
