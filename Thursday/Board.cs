@@ -809,6 +809,30 @@ namespace Thursday
 
                 #endregion
 
+                #region Pawn search
+
+                int pawnPos1, pawnPos2, dirY;
+
+                if (WhosMove == Colour.White)
+                {
+                    dirY = 1;
+                    pawnPos1 = kingPos + 7;
+                    pawnPos2 = kingPos + 9;
+                }
+                else
+                {
+                    dirY = -1;
+                    pawnPos1 = kingPos - 9;
+                    pawnPos2 = kingPos - 7;
+                }
+
+                if (ExistsAtOffset(kingPos, dirY, -1))
+                    if (S[pawnPos1] != null && S[pawnPos1].PieceType == PieceType.Pawn && S[pawnPos1].Colour != WhosMove) return true;
+                if (ExistsAtOffset(kingPos, dirY, 1))
+                    if (S[pawnPos2] != null && S[pawnPos2].PieceType == PieceType.Pawn && S[pawnPos2].Colour != WhosMove) return true;
+
+                #endregion
+
                 return false;
             }
         }

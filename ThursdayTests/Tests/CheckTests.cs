@@ -12,6 +12,7 @@ namespace ThursdayTests
     {
         public static void RunAll()
         {
+            PawnAndKing();
             QueenAndKing();
             BishopAndKing();
             RookAndKing();
@@ -60,6 +61,17 @@ namespace ThursdayTests
             Assert.IsTrue(b0c.KingIsInCheck);
             Board b0d = BoardBuilder.BuildBoard("K....... r......." + new String('.', 48));
             Assert.IsTrue(b0d.KingIsInCheck);
+        }
+        public static void PawnAndKing()
+        {
+            Board b1 = BoardBuilder.BuildBoard("K....... .p......" + new String('.', 48));
+            Assert.IsTrue(b1.KingIsInCheck);
+
+            Board b2 = BoardBuilder.BuildBoard(".K...... .p......" + new String('.', 48));
+            Assert.IsFalse(b2.KingIsInCheck);
+
+            Board b3 = BoardBuilder.BuildBoard("..K..... .p......" + new String('.', 48));
+            Assert.IsTrue(b3.KingIsInCheck);
         }
     }
 }
