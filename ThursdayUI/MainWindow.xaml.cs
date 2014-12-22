@@ -160,7 +160,27 @@ namespace ThursdayUI
         {
             while (m_PlayingDemo)
             {
-                computer.ComputeAndMakeBestMove(null);
+                try
+                {
+                    computer.ComputeAndMakeBestMove(null);
+                }
+                catch (ApplicationException e)
+                {
+                    if (e.Message == "Checkmate")
+                    {
+                        m_PlayingDemo = false;
+                        MessageBox.Show("Checkmate");
+                        return;
+                    }
+                    if (e.Message == "Stalemate")
+                    {
+                        m_PlayingDemo = false;
+                        MessageBox.Show("Stalemate");
+                        return;
+                    }
+                    else
+                        throw;
+                }
                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action<Board>(UpdateUi), computer.Board);
                 Thread.Sleep(50);
             }

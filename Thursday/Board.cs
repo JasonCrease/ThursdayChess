@@ -688,18 +688,24 @@ namespace Thursday
             get
             {
                 int kingPos = -1;
+                int enemyKingPos = -1;
+
 
                 for (int i = 0; i < 64; i++)
                 {
-                    if (S[i] != null && S[i].PieceType == PieceType.King && S[i].Colour == WhosMove)
+                    if (S[i] != null && S[i].PieceType == PieceType.King)
                     {
-                        kingPos = i;
-                        break;
+                        if  (S[i].Colour == WhosMove)
+                            kingPos = i;
+                        else
+                            enemyKingPos = i;
                     }
                 }
 
                 if (kingPos == -1)
-                    throw new ApplicationException("Cannot find king");
+                    throw new ApplicationException("Cannot find my king");
+                if (enemyKingPos == -1)
+                    throw new ApplicationException("Cannot find enemy king");
 
                 #region Diagonal search
 
@@ -830,6 +836,21 @@ namespace Thursday
                     if (S[pawnPos1] != null && S[pawnPos1].PieceType == PieceType.Pawn && S[pawnPos1].Colour != WhosMove) return true;
                 if (ExistsAtOffset(kingPos, dirY, 1))
                     if (S[pawnPos2] != null && S[pawnPos2].PieceType == PieceType.Pawn && S[pawnPos2].Colour != WhosMove) return true;
+
+                #endregion
+
+                #region King search
+
+                if (ExistsAtOffset(kingPos, -1, -1) && enemyKingPos == kingPos - 9) return true;
+                if (ExistsAtOffset(kingPos, -1, 0) && enemyKingPos == kingPos - 8) return true;
+                if (ExistsAtOffset(kingPos, -1, 1) && enemyKingPos == kingPos - 7) return true;
+
+                if (ExistsAtOffset(kingPos, 0, -1) && enemyKingPos == kingPos - 1) return true;
+                if (ExistsAtOffset(kingPos, 0, 1) && enemyKingPos == kingPos + 1) return true;
+
+                if (ExistsAtOffset(kingPos, 1, -1) && enemyKingPos == kingPos + 7) return true;
+                if (ExistsAtOffset(kingPos, 1, 0) && enemyKingPos == kingPos + 8) return true;
+                if (ExistsAtOffset(kingPos, 1, 1) && enemyKingPos == kingPos + 9) return true;
 
                 #endregion
 

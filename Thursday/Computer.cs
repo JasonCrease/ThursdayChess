@@ -88,7 +88,9 @@ namespace Thursday
             IsThinking = true;
 
             Action action = (Action)MoveCalculatedAction;
+
             Move m = ComputeBestMove();
+
             this.MakeMove(m.From, m.To);
 
             IsThinking = false;
